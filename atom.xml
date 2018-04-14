@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hexo</title>
+  <title>又尔enter的blog</title>
   
   
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-14T13:23:41.918Z</updated>
+  <updated>2018-04-14T16:07:27.203Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
-    <name>John Doe</name>
+    <name>又尔enter</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>测试中文title</title>
+    <link href="http://yoursite.com/2018/04/15/test/"/>
+    <id>http://yoursite.com/2018/04/15/test/</id>
+    <published>2018-04-14T16:06:14.977Z</published>
+    <updated>2018-04-14T16:07:27.203Z</updated>
+    
+    <content type="html"><![CDATA[<html lang="en"><br> <head><br>  <meta charset="UTF-8"><br>  <meta name="Generator" content="EditPlus®"><br>  <meta name="Author" content=""><br>  <meta name="Keywords" content=""><br>  <meta name="Description" content=""><br>  <title>Document</title><br> </head><br> <body><br>   哈哈，测试中文！！！<br> </body><br></html>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;html lang=&quot;en&quot;&gt;&lt;br&gt; &lt;head&gt;&lt;br&gt;  &lt;meta charset=&quot;UTF-8&quot;&gt;&lt;br&gt;  &lt;meta name=&quot;Generator&quot; content=&quot;EditPlus®&quot;&gt;&lt;br&gt;  &lt;meta name=&quot;Author&quot; content=&quot;&quot;
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
