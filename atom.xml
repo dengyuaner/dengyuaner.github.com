@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://www.dyenter.top/"/>
   <updated>2018-04-15T12:28:50.173Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://www.dyenter.top/</id>
   
   <author>
     <name>又尔enter</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Android线程间通信基础——Handler,Looper,MessageQueue</title>
-    <link href="http://yoursite.com/2018/04/15/handler/"/>
-    <id>http://yoursite.com/2018/04/15/handler/</id>
+    <link href="https://www.dyenter.top/2018/04/15/handler/"/>
+    <id>https://www.dyenter.top/2018/04/15/handler/</id>
     <published>2018-04-15T12:13:58.000Z</published>
     <updated>2018-04-15T12:28:50.173Z</updated>
     
@@ -34,23 +34,23 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="Handler" scheme="http://yoursite.com/tags/Handler/"/>
+      <category term="Handler" scheme="https://www.dyenter.top/tags/Handler/"/>
     
-      <category term="MessageQueue" scheme="http://yoursite.com/tags/MessageQueue/"/>
+      <category term="MessageQueue" scheme="https://www.dyenter.top/tags/MessageQueue/"/>
     
-      <category term="Message" scheme="http://yoursite.com/tags/Message/"/>
+      <category term="Message" scheme="https://www.dyenter.top/tags/Message/"/>
     
   </entry>
   
   <entry>
     <title>Android音频开发（五）——使用ffmpeg播放音频</title>
-    <link href="http://yoursite.com/2018/04/15/audio5/"/>
-    <id>http://yoursite.com/2018/04/15/audio5/</id>
+    <link href="https://www.dyenter.top/2018/04/15/audio5/"/>
+    <id>https://www.dyenter.top/2018/04/15/audio5/</id>
     <published>2018-04-15T06:28:44.000Z</published>
     <updated>2018-04-15T06:32:01.223Z</updated>
     
@@ -66,27 +66,27 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/categories/Android/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/categories/Android/NDK/"/>
     
-      <category term="ffmpeg" scheme="http://yoursite.com/categories/Android/NDK/ffmpeg/"/>
+      <category term="ffmpeg" scheme="https://www.dyenter.top/categories/Android/NDK/ffmpeg/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="音视频" scheme="http://yoursite.com/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
+      <category term="音视频" scheme="https://www.dyenter.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/tags/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/tags/NDK/"/>
     
-      <category term="ffmpeg" scheme="http://yoursite.com/tags/ffmpeg/"/>
+      <category term="ffmpeg" scheme="https://www.dyenter.top/tags/ffmpeg/"/>
     
   </entry>
   
   <entry>
     <title>Android音频开发（四）——ffmpeg的编译</title>
-    <link href="http://yoursite.com/2018/04/15/audio4/"/>
-    <id>http://yoursite.com/2018/04/15/audio4/</id>
+    <link href="https://www.dyenter.top/2018/04/15/audio4/"/>
+    <id>https://www.dyenter.top/2018/04/15/audio4/</id>
     <published>2018-04-15T06:25:28.000Z</published>
     <updated>2018-04-15T06:29:16.861Z</updated>
     
@@ -101,27 +101,27 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/categories/Android/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/categories/Android/NDK/"/>
     
-      <category term="ffmpeg" scheme="http://yoursite.com/categories/Android/NDK/ffmpeg/"/>
+      <category term="ffmpeg" scheme="https://www.dyenter.top/categories/Android/NDK/ffmpeg/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="音视频" scheme="http://yoursite.com/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
+      <category term="音视频" scheme="https://www.dyenter.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/tags/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/tags/NDK/"/>
     
-      <category term="ffmpeg" scheme="http://yoursite.com/tags/ffmpeg/"/>
+      <category term="ffmpeg" scheme="https://www.dyenter.top/tags/ffmpeg/"/>
     
   </entry>
   
   <entry>
     <title>Android音频开发（三）——音频编解码</title>
-    <link href="http://yoursite.com/2018/04/15/audio3/"/>
-    <id>http://yoursite.com/2018/04/15/audio3/</id>
+    <link href="https://www.dyenter.top/2018/04/15/audio3/"/>
+    <id>https://www.dyenter.top/2018/04/15/audio3/</id>
     <published>2018-04-15T06:21:30.000Z</published>
     <updated>2018-04-15T06:25:17.222Z</updated>
     
@@ -137,23 +137,23 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/categories/Android/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/categories/Android/NDK/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="音视频" scheme="http://yoursite.com/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
+      <category term="音视频" scheme="https://www.dyenter.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/tags/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/tags/NDK/"/>
     
   </entry>
   
   <entry>
     <title>Android音频开发（二）——音频采集与播放</title>
-    <link href="http://yoursite.com/2018/04/15/audio2/"/>
-    <id>http://yoursite.com/2018/04/15/audio2/</id>
+    <link href="https://www.dyenter.top/2018/04/15/audio2/"/>
+    <id>https://www.dyenter.top/2018/04/15/audio2/</id>
     <published>2018-04-15T05:46:24.000Z</published>
     <updated>2018-04-15T05:49:59.370Z</updated>
     
@@ -169,23 +169,23 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/categories/Android/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/categories/Android/NDK/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="音视频" scheme="http://yoursite.com/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
+      <category term="音视频" scheme="https://www.dyenter.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/tags/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/tags/NDK/"/>
     
   </entry>
   
   <entry>
     <title>Android音频开发（一）——基础知识</title>
-    <link href="http://yoursite.com/2018/04/15/audio1/"/>
-    <id>http://yoursite.com/2018/04/15/audio1/</id>
+    <link href="https://www.dyenter.top/2018/04/15/audio1/"/>
+    <id>https://www.dyenter.top/2018/04/15/audio1/</id>
     <published>2018-04-15T05:30:33.000Z</published>
     <updated>2018-04-15T05:36:47.692Z</updated>
     
@@ -200,23 +200,23 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/categories/Android/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/categories/Android/NDK/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="音视频" scheme="http://yoursite.com/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
+      <category term="音视频" scheme="https://www.dyenter.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
     
-      <category term="NDK" scheme="http://yoursite.com/tags/NDK/"/>
+      <category term="NDK" scheme="https://www.dyenter.top/tags/NDK/"/>
     
   </entry>
   
   <entry>
     <title>listview相关问题——只更新某一个item</title>
-    <link href="http://yoursite.com/2018/04/15/listview2/"/>
-    <id>http://yoursite.com/2018/04/15/listview2/</id>
+    <link href="https://www.dyenter.top/2018/04/15/listview2/"/>
+    <id>https://www.dyenter.top/2018/04/15/listview2/</id>
     <published>2018-04-15T05:28:27.000Z</published>
     <updated>2018-04-15T05:29:41.195Z</updated>
     
@@ -232,21 +232,21 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="ListView" scheme="http://yoursite.com/tags/ListView/"/>
+      <category term="ListView" scheme="https://www.dyenter.top/tags/ListView/"/>
     
-      <category term="EditText" scheme="http://yoursite.com/tags/EditText/"/>
+      <category term="EditText" scheme="https://www.dyenter.top/tags/EditText/"/>
     
   </entry>
   
   <entry>
     <title>Android近场通讯——NFC(二)</title>
-    <link href="http://yoursite.com/2018/04/15/nfc2/"/>
-    <id>http://yoursite.com/2018/04/15/nfc2/</id>
+    <link href="https://www.dyenter.top/2018/04/15/nfc2/"/>
+    <id>https://www.dyenter.top/2018/04/15/nfc2/</id>
     <published>2018-04-15T05:21:18.000Z</published>
     <updated>2018-04-15T05:27:12.475Z</updated>
     
@@ -262,21 +262,21 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="NFC" scheme="http://yoursite.com/tags/NFC/"/>
+      <category term="NFC" scheme="https://www.dyenter.top/tags/NFC/"/>
     
-      <category term="近场通讯" scheme="http://yoursite.com/tags/%E8%BF%91%E5%9C%BA%E9%80%9A%E8%AE%AF/"/>
+      <category term="近场通讯" scheme="https://www.dyenter.top/tags/%E8%BF%91%E5%9C%BA%E9%80%9A%E8%AE%AF/"/>
     
   </entry>
   
   <entry>
     <title>Android近场通讯——NFC(一)</title>
-    <link href="http://yoursite.com/2018/04/15/nfc1/"/>
-    <id>http://yoursite.com/2018/04/15/nfc1/</id>
+    <link href="https://www.dyenter.top/2018/04/15/nfc1/"/>
+    <id>https://www.dyenter.top/2018/04/15/nfc1/</id>
     <published>2018-04-15T05:07:18.000Z</published>
     <updated>2018-04-15T05:45:57.582Z</updated>
     
@@ -291,21 +291,21 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="NFC" scheme="http://yoursite.com/tags/NFC/"/>
+      <category term="NFC" scheme="https://www.dyenter.top/tags/NFC/"/>
     
-      <category term="近场通讯" scheme="http://yoursite.com/tags/%E8%BF%91%E5%9C%BA%E9%80%9A%E8%AE%AF/"/>
+      <category term="近场通讯" scheme="https://www.dyenter.top/tags/%E8%BF%91%E5%9C%BA%E9%80%9A%E8%AE%AF/"/>
     
   </entry>
   
   <entry>
     <title>listview相关问题——item包含EditText</title>
-    <link href="http://yoursite.com/2018/04/15/listview/"/>
-    <id>http://yoursite.com/2018/04/15/listview/</id>
+    <link href="https://www.dyenter.top/2018/04/15/listview/"/>
+    <id>https://www.dyenter.top/2018/04/15/listview/</id>
     <published>2018-04-15T04:56:01.000Z</published>
     <updated>2018-04-15T05:44:59.222Z</updated>
     
@@ -321,21 +321,21 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="ListView" scheme="http://yoursite.com/tags/ListView/"/>
+      <category term="ListView" scheme="https://www.dyenter.top/tags/ListView/"/>
     
-      <category term="EditText" scheme="http://yoursite.com/tags/EditText/"/>
+      <category term="EditText" scheme="https://www.dyenter.top/tags/EditText/"/>
     
   </entry>
   
   <entry>
     <title>表格筛选控件</title>
-    <link href="http://yoursite.com/2018/04/15/grid/"/>
-    <id>http://yoursite.com/2018/04/15/grid/</id>
+    <link href="https://www.dyenter.top/2018/04/15/grid/"/>
+    <id>https://www.dyenter.top/2018/04/15/grid/</id>
     <published>2018-04-15T04:03:32.000Z</published>
     <updated>2018-04-15T05:44:24.966Z</updated>
     
@@ -353,19 +353,19 @@
     
     </summary>
     
-      <category term="Android" scheme="http://yoursite.com/categories/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/categories/Android/"/>
     
     
-      <category term="Android" scheme="http://yoursite.com/tags/Android/"/>
+      <category term="Android" scheme="https://www.dyenter.top/tags/Android/"/>
     
-      <category term="自定义View" scheme="http://yoursite.com/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
+      <category term="自定义View" scheme="https://www.dyenter.top/tags/%E8%87%AA%E5%AE%9A%E4%B9%89View/"/>
     
   </entry>
   
   <entry>
     <title>Hello World</title>
-    <link href="http://yoursite.com/2018/04/14/hello-world/"/>
-    <id>http://yoursite.com/2018/04/14/hello-world/</id>
+    <link href="https://www.dyenter.top/2018/04/14/hello-world/"/>
+    <id>https://www.dyenter.top/2018/04/14/hello-world/</id>
     <published>2018-04-14T13:23:41.917Z</published>
     <updated>2018-04-14T15:58:58.848Z</updated>
     
