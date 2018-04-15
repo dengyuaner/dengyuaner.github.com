@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-14T16:07:27.203Z</updated>
+  <updated>2018-04-15T02:52:33.517Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>test</title>
+    <link href="http://yoursite.com/2018/04/15/test-1/"/>
+    <id>http://yoursite.com/2018/04/15/test-1/</id>
+    <published>2018-04-15T02:48:40.000Z</published>
+    <updated>2018-04-15T02:52:33.517Z</updated>
+    
+    <content type="html"><![CDATA[<html lang="en"><br> <head><br>  <meta charset="UTF-8"><br>  <meta name="Generator" content="EditPlus®"><br>  <meta name="Author" content=""><br>  <meta name="Keywords" content=""><br>  <meta name="Description" content=""><br>  <title>Document</title><br> </head><br> <body><br>   测试标签，分类！！！<br> </body><br></html>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;html lang=&quot;en&quot;&gt;&lt;br&gt; &lt;head&gt;&lt;br&gt;  &lt;meta charset=&quot;UTF-8&quot;&gt;&lt;br&gt;  &lt;meta name=&quot;Generator&quot; content=&quot;EditPlus®&quot;&gt;&lt;br&gt;  &lt;meta name=&quot;Author&quot; content=&quot;&quot;
+      
+    
+    </summary>
+    
+      <category term="Diary" scheme="http://yoursite.com/categories/Diary/"/>
+    
+    
+      <category term="PS3" scheme="http://yoursite.com/tags/PS3/"/>
+    
+      <category term="Games" scheme="http://yoursite.com/tags/Games/"/>
+    
+  </entry>
+  
+  <entry>
     <title>测试中文title</title>
     <link href="http://yoursite.com/2018/04/15/test/"/>
     <id>http://yoursite.com/2018/04/15/test/</id>
     <published>2018-04-14T16:06:14.977Z</published>
-    <updated>2018-04-14T16:07:27.203Z</updated>
+    <updated>2018-04-15T02:53:32.236Z</updated>
     
     <content type="html"><![CDATA[<html lang="en"><br> <head><br>  <meta charset="UTF-8"><br>  <meta name="Generator" content="EditPlus®"><br>  <meta name="Author" content=""><br>  <meta name="Keywords" content=""><br>  <meta name="Description" content=""><br>  <title>Document</title><br> </head><br> <body><br>   哈哈，测试中文！！！<br> </body><br></html>]]></content>
     
@@ -34,6 +61,12 @@
     
     </summary>
     
+      <category term="Test" scheme="http://yoursite.com/categories/Test/"/>
+    
+    
+      <category term="PS3" scheme="http://yoursite.com/tags/PS3/"/>
+    
+      <category term="Games" scheme="http://yoursite.com/tags/Games/"/>
     
   </entry>
   
