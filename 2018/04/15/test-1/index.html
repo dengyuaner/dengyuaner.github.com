@@ -314,7 +314,7 @@
     <!-- Valine Comments script -->
     <script>
         var GUEST_INFO = ['nick','mail','link'];
-        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+        var guest_info = 'nick'.split(',').filter(function(item){
           return GUEST_INFO.indexOf(item) > -1
         });
         new Valine({
@@ -323,7 +323,7 @@
             verify: 'false' == 'true',
             appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
             appKey: "ASLkdXiKzhwVfITucqazdCbA",
-            avatar: "mm",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
             placeholder: "请输入您的留言",
             guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
             pageSize: "10"
