@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android音频开发（四）——ffmpeg的编译 | 又尔enter的blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,音视频,NDK,ffmpeg">
+    <meta name="description" content="&amp;emsp;&amp;emsp;前几节我们讲的都是调用android原生API来进行音频的播放，编解码等操作，是在java层面，而且由于MediaCodec兼容性的限制，导致无法在API16以下使用，所以我们不得不放弃java层，转而寻求更为成熟的c/c++处理方案，再用jni去调用。所以，大名鼎鼎的ffmpeg闪亮登场了。">
+<meta name="keywords" content="Android,音视频,NDK,ffmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android音频开发（四）——ffmpeg的编译">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/audio4/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;前几节我们讲的都是调用android原生API来进行音频的播放，编解码等操作，是在java层面，而且由于MediaCodec兼容性的限制，导致无法在API16以下使用，所以我们不得不放弃java层，转而寻求更为成熟的c/c++处理方案，再用jni去调用。所以，大名鼎鼎的ffmpeg闪亮登场了。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-4291bd7ba1434eb0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-32f0ef86ceebe8c0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-e223d9e6b4d714b6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-dcfddc9f4eee7857.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-511d4ec3dbfdad11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-0575ff4443906d56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-eb9dd8820032b5cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-15T06:29:16.861Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android音频开发（四）——ffmpeg的编译">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;前几节我们讲的都是调用android原生API来进行音频的播放，编解码等操作，是在java层面，而且由于MediaCodec兼容性的限制，导致无法在API16以下使用，所以我们不得不放弃java层，转而寻求更为成熟的c/c++处理方案，再用jni去调用。所以，大名鼎鼎的ffmpeg闪亮登场了。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3287039-4291bd7ba1434eb0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android音频开发（四）——ffmpeg的编译</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android音频开发（四）——ffmpeg的编译</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-15T06:25:28.000Z" itemprop="datePublished" class="page-time">
+  2018-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/">NDK</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/ffmpeg/">ffmpeg</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#首先"><span class="post-toc-number">1.</span> <span class="post-toc-text">首先</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#开始编译"><span class="post-toc-number">2.</span> <span class="post-toc-text">开始编译</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#接下来在ffmpeg目录下新建脚本文件buildff-sh，文件内容如下"><span class="post-toc-number">3.</span> <span class="post-toc-text">接下来在ffmpeg目录下新建脚本文件buildff.sh，文件内容如下</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-audio4"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android音频开发（四）——ffmpeg的编译</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-15 14:25:28" datetime="2018-04-15T06:25:28.000Z"  itemprop="datePublished">2018-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/">NDK</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/ffmpeg/">ffmpeg</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>&emsp;&emsp;前几节我们讲的都是调用android原生API来进行音频的播放，编解码等操作，是在java层面，而且由于<a href="https://developer.android.google.cn/reference/android/media/MediaCodec.html" target="_blank" rel="noopener">MediaCodec</a>兼容性的限制，导致无法在API16以下使用，所以我们不得不放弃java层，转而寻求更为成熟的c/c++处理方案，再用jni去调用。所以，大名鼎鼎的<a href="https://www.ffmpeg.org/" target="_blank" rel="noopener">ffmpeg</a>闪亮登场了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-4291bd7ba1434eb0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a1.jpg" title="">
+                </div>
+                <div class="image-caption">a1.jpg</div>
+            </figure>
+<p>&emsp;&emsp;那么问题来了，怎么使用这个玩意儿了？接下来跟着我走</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-32f0ef86ceebe8c0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a2.jpg" title="">
+                </div>
+                <div class="image-caption">a2.jpg</div>
+            </figure>
+<h2 id="首先"><a href="#首先" class="headerlink" title="首先"></a>首先</h2><p>&emsp;&emsp;去官网下载源码<a href="http://ffmpeg.org/download.html，最新版本是3.3.3，下载完成后我们在linux下把源码编译成android能用的so文件，当然你也可以直接打开cmd命令去使用它，熟悉它的一些命令。" target="_blank" rel="noopener">http://ffmpeg.org/download.html，最新版本是3.3.3，下载完成后我们在linux下把源码编译成android能用的so文件，当然你也可以直接打开cmd命令去使用它，熟悉它的一些命令。</a></p>
+<p>&emsp;&emsp;我这里用的是VirtualBox+Ubuntu的方式去编译，为了方便，我这里专门设置了共享文件夹方便windows和ubuntu传输文件。共享文件夹的设置大家请百度吧。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-e223d9e6b4d714b6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3.jpg" title="">
+                </div>
+                <div class="image-caption">a3.jpg</div>
+            </figure></p>
+<h2 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h2><p>首先要安装NDK，下载好NDK后解压在用户根目录，并配置好环境变量</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-dcfddc9f4eee7857.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a3.png" title="">
+                </div>
+                <div class="image-caption">a3.png</div>
+            </figure>
+<p>输入gedit ~/.bashrc,加入以下代码<br>export NDK_HOME=/home/dy/android-ndk-r14b<br>注意换成你自己的路径，保存然后输入source ~/.bashrc编译一下即可</p>
+<p>你可以<a href="http://lib.csdn.net/base/softwaretest" target="_blank" rel="noopener">测试</a>一下有没有安装成功：$ cd $NDK_ROOT$ ./ndk-build NDK_PROJECT_PATH=$NDK_ROOT/samples/two-libs</p>
+<p>在根目录下新建一个工程media，用于存放ffmpeg，和编译脚本，把你下载的ffmpeg源码放进来。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-511d4ec3dbfdad11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a4.png" title="">
+                </div>
+                <div class="image-caption">a4.png</div>
+            </figure>
+<p>然后找到ffmpeg文件夹下得configure文件，替换其中的几行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SLIBNAME_WITH_MAJOR=&apos;$(SLIBNAME).$(LIBMAJOR)&apos;</span><br><span class="line">LIB_INSTALL_EXTRA_CMD=&apos;$$(RANLIB) &quot;$(LIBDIR)/$(LIBNAME)&quot;&apos;</span><br><span class="line">SLIB_INSTALL_NAME=&apos;$(SLIBNAME_WITH_VERSION)&apos;</span><br><span class="line">SLIB_INSTALL_LINKS=&apos;$(SLIBNAME_WITH_MAJOR) $(SLIBNAME)&apos;</span><br><span class="line">将其修改成：</span><br><span class="line">SLIBNAME_WITH_MAJOR=&apos;$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)&apos;</span><br><span class="line">LIB_INSTALL_EXTRA_CMD=&apos;$$(RANLIB) &quot;$(LIBDIR)/$(LIBNAME)&quot;&apos;</span><br><span class="line">SLIB_INSTALL_NAME=&apos;$(SLIBNAME_WITH_MAJOR)&apos;</span><br><span class="line">SLIB_INSTALL_LINKS=&apos;$(SLIBNAME)&apos;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;为什么要这么做呢，这是因为如果直接按照未修改的配置进行编译，结果编译出来的so文件类似libavcodec.so.55.39.101，版本号位于so之后，Android无法加载</p>
+<h2 id="接下来在ffmpeg目录下新建脚本文件buildff-sh，文件内容如下"><a href="#接下来在ffmpeg目录下新建脚本文件buildff-sh，文件内容如下" class="headerlink" title="接下来在ffmpeg目录下新建脚本文件buildff.sh，文件内容如下"></a>接下来在ffmpeg目录下新建脚本文件buildff.sh，文件内容如下</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">#清除上次编译的东西</span><br><span class="line">make clean</span><br><span class="line">#配置NDK路径,注意换成你自己的路径</span><br><span class="line">export NDK=/home/dy/android-ndk-r14b</span><br><span class="line">#配置工具链，注意查看是否有该路径，各个ndk版本不同，路径会有不同</span><br><span class="line">export PREBUILT=$NDK/toolchains/arm-linux-androideabi-4.9/prebuilt</span><br><span class="line">#配置平台，同上注意路径</span><br><span class="line">export PLATFORM=$NDK/platforms/android-9/arch-arm</span><br><span class="line">#配置编译好了之后的文件输出目录，$(pwd)当前目录下</span><br><span class="line">export PREFIX=$(pwd)/android/</span><br><span class="line">build_one()&#123;</span><br><span class="line">  ./configure --target-os=linux --prefix=$PREFIX \</span><br><span class="line">--enable-cross-compile \</span><br><span class="line">--enable-runtime-cpudetect \</span><br><span class="line">--disable-asm \</span><br><span class="line">--arch=arm \</span><br><span class="line">--cc=$PREBUILT/linux-x86_64/bin/arm-linux-androideabi-gcc \</span><br><span class="line">--cross-prefix=$PREBUILT/linux-x86_64/bin/arm-linux-androideabi- \</span><br><span class="line">--disable-stripping \</span><br><span class="line">--nm=$PREBUILT/linux-x86_64/bin/arm-linux-androideabi-nm \</span><br><span class="line">--sysroot=$PLATFORM \</span><br><span class="line">--enable-gpl --enable-shared --disable-static --enable-nonfree --enable-version3 --enable-small \</span><br><span class="line">--enable-zlib --disable-ffprobe --disable-ffplay --disable-ffmpeg --disable-ffserver --disable-debug \</span><br><span class="line">--extra-cflags=&quot;-fPIC -DANDROID -D__thumb__ -mthumb -Wfatal-errors -Wno-deprecated -mfloat-abi=softfp -marm -march=armv7-a&quot; </span><br><span class="line">&#125;</span><br><span class="line">build_one</span><br><span class="line"></span><br><span class="line">#4线程编译</span><br><span class="line">make -j4</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>然后输入以下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 ./buildff.sh</span><br><span class="line"> ./build_android.sh</span><br></pre></td></tr></table></figure></p>
+<p>就开始编译了</p>
+<p>编译完成后会在ffmpeg下生成android文件夹，里面就是include源文件和编译好的so文件，然后通过共享文件夹把android文件夹传给windows，供我们使用即可。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-0575ff4443906d56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="a5.png" title="">
+                </div>
+                <div class="image-caption">a5.png</div>
+            </figure>
+<p>最后上个妹子图缓解一下视力，接下来就是在AS里面运用了</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-eb9dd8820032b5cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="6VD[D]L1MLP{EEZX8S498DG.png" title="">
+                </div>
+                <div class="image-caption">6VD[D]L1MLP{EEZX8S498DG.png</div>
+            </figure>
+<p><a href="https://www.dyenter.top/2018/04/15/audio5/" target="_blank" rel="noopener">下一篇</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-15T06:29:16.861Z" itemprop="dateUpdated">2018-04-15 14:29:16</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NDK/">NDK</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ffmpeg/">ffmpeg</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/音视频/">音视频</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/audio4/&title=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/audio4/&title=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/audio4/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/audio4/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/audio4/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/04/15/audio5/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Android音频开发（五）——使用ffmpeg播放音频</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/15/audio3/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android音频开发（三）——音频编解码</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/audio4/&title=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/audio4/&title=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/audio4/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android音频开发（四）——ffmpeg的编译》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/audio4/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/audio4/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3ay66DMAxFUf7/p3ulO6XAPjaYVNoZVSoNKx1Y8WPb8Pr8r/3n82f2a//t9sSSK1dum/s5XUdEjjsikh2+HEmuXLmDXB6Y0pCX0i9scuXKXYx7FHTOwyLfU65cub/I5ejO3yFXrtx1uGkhgz/f2U2uXLlvcTsF07s+D9V35cqV2+5KpMXTe3/1ZR+5cuWOcEmb5Lk0hlx6tnQjuXLltrmkzMEPw5sufIfDECZXrtwRLt8obbSkf8qhSq5cuS9xyZBEbZEL0MXohly5cke4PPGotT0IjpdO5MqVO8Pl15TgItJo1aBusFy5cke4fNyBBKzaIAU6qly5cge5tVeiRAWHP9RWkStX7gg3LYikr+SHkStX7jrcWmmDpEm1Y1wY5MqVO8JNyxlpYZQUWeJ0S65cuQ9zHwk04SWJj2vIlSt3ktsvYZACKAlbKJDJlSt3hJsOV/EhLVI8DY4hV67cEW4aUGojVp0WS3GwQ65cuW1u2lLlYYgnVzwdkitX7iQ3vY7UhrFayY9cuXKX5KZtFX4xCpIiuXLlLszlw1UchMorcuXKHeQGzc6wNZImVLeVReTKldvgpgXT2otTnFy5cl/i/gF25LR7CXn6ywAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

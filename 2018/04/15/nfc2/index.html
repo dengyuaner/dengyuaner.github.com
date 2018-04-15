@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android近场通讯——NFC(二) | 又尔enter的blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,NFC,近场通讯">
+    <meta name="description" content="在上一篇中，简单的介绍了下nfc的相关知识，这一篇将以代码的形式更深入的理解nfc。 准备工作首先肯定要申请相应的权限：&amp;lt;uses-permission android:name=&amp;quot;android.permission.NFC&amp;quot; /&amp;gt;&amp;lt;uses-feature android:name=&amp;quot;android.hardware.nfc&amp;quot; andr">
+<meta name="keywords" content="Android,NFC,近场通讯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android近场通讯——NFC(二)">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/nfc2/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="在上一篇中，简单的介绍了下nfc的相关知识，这一篇将以代码的形式更深入的理解nfc。 准备工作首先肯定要申请相应的权限：&amp;lt;uses-permission android:name=&amp;quot;android.permission.NFC&amp;quot; /&amp;gt;&amp;lt;uses-feature android:name=&amp;quot;android.hardware.nfc&amp;quot; andr">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-15T05:27:12.475Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android近场通讯——NFC(二)">
+<meta name="twitter:description" content="在上一篇中，简单的介绍了下nfc的相关知识，这一篇将以代码的形式更深入的理解nfc。 准备工作首先肯定要申请相应的权限：&amp;lt;uses-permission android:name=&amp;quot;android.permission.NFC&amp;quot; /&amp;gt;&amp;lt;uses-feature android:name=&amp;quot;android.hardware.nfc&amp;quot; andr">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android近场通讯——NFC(二)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android近场通讯——NFC(二)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-15T05:21:18.000Z" itemprop="datePublished" class="page-time">
+  2018-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#准备工作"><span class="post-toc-number">1.</span> <span class="post-toc-text">准备工作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#首先肯定要申请相应的权限："><span class="post-toc-number">1.1.</span> <span class="post-toc-text">首先肯定要申请相应的权限：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#然后在相应的要接收nfc信息的activity中注册intent-filter："><span class="post-toc-number">1.2.</span> <span class="post-toc-text">然后在相应的要接收nfc信息的activity中注册intent filter：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#读取数据"><span class="post-toc-number">2.</span> <span class="post-toc-text">读取数据</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#写入数据"><span class="post-toc-number">3.</span> <span class="post-toc-text">写入数据</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#NdefRecord对象"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">NdefRecord对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#生成需要的NdefMessage对象"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">生成需要的NdefMessage对象</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最后写入数据："><span class="post-toc-number">3.3.</span> <span class="post-toc-text">最后写入数据：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#完整代码已上传至github，欢迎clone，谢谢star"><span class="post-toc-number">4.</span> <span class="post-toc-text">完整代码已上传至github，欢迎clone，谢谢star</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-nfc2"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android近场通讯——NFC(二)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-15 13:21:18" datetime="2018-04-15T05:21:18.000Z"  itemprop="datePublished">2018-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>在<a href="https://www.dyenter.top/2018/04/15/nfc1/" target="_blank" rel="noopener">上一篇</a>中，简单的介绍了下nfc的相关知识，这一篇将以代码的形式更深入的理解nfc。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="首先肯定要申请相应的权限："><a href="#首先肯定要申请相应的权限：" class="headerlink" title="首先肯定要申请相应的权限："></a>首先肯定要申请相应的权限：</h3><p><code>&lt;uses-permission android:name=&quot;android.permission.NFC&quot; /&gt;</code><br><code>&lt;uses-feature android:name=&quot;android.hardware.nfc&quot; android:required=&quot;true&quot; /&gt;</code><br><code>&lt;uses-sdk android:minSdkVersion=&quot;14&quot;/&gt;</code><br>同时要注意最小api的版本，根据谷歌官方的说话，NFC在Android上，也是从API9才开始支持的，但是到了API14 Google才对NFC大力开发，所以等到了API15的时候，NFC的传输速度就得到了很大的加强，所以最小api最好设置为14.</p>
+<h3 id="然后在相应的要接收nfc信息的activity中注册intent-filter："><a href="#然后在相应的要接收nfc信息的activity中注册intent-filter：" class="headerlink" title="然后在相应的要接收nfc信息的activity中注册intent filter："></a>然后在相应的要接收nfc信息的activity中注册intent filter：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=&quot;android.nfc.action.NDEF_DISCOVERED&quot;/&gt;</span><br><span class="line">    &lt;data android:mimeType=&quot;text/plain&quot;/&gt;</span><br><span class="line">&lt;/intent-filter&gt;</span><br><span class="line">&lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=&quot;android.nfc.action.TECH_DISCOVERED&quot;/&gt;</span><br><span class="line">&lt;/intent-filter&gt;</span><br><span class="line"></span><br><span class="line">&lt;meta-data</span><br><span class="line">    android:name=&quot;android.nfc.action.TECH_DISCOVERED&quot;</span><br><span class="line">    android:resource=&quot;@xml/nfc_tech_filter&quot;/&gt;</span><br><span class="line">&lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=&quot;android.nfc.action.TAG_DISCOVERED&quot;/&gt;</span><br><span class="line">    &lt;category android:name=&quot;android.intent.category.DEFAULT&quot;/&gt;</span><br><span class="line">&lt;/intent-filter&gt;</span><br></pre></td></tr></table></figure>
+<p>如果您的活动过滤器是ACTION_TECH_DISCOVERED，你必须创建一个指定的活动支持内技术的XML资源文件，可以通过android.nfc.Tag类的getTechList()获取子集<br>其中名为nfc_tech_filter的xml文件如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;resources xmlns:xliff=&quot;urn:oasis:names:tc:xliff:document:1.2&quot;&gt;</span><br><span class="line">    &lt;tech-list&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.IsoDep&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcA&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcB&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcF&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcV&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.Ndef&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NdefFormatable&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.MifareClassic&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.MifareUltralight&lt;/tech&gt;</span><br><span class="line">        　　</span><br><span class="line">    &lt;/tech-list&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></p>
+<p>当然您也可以指定多个tech-list组。每个的tech-list集独立地考虑，并且您的活动被认为是一个匹配，如果任何一个 tech-list组是由返回的技术的一个子集getTechList()，这提供了AND与OR匹配技术，语义。<br>下面的例子相匹配，可以支持NFCA和NDEF技术或可以支持NfcB和NDEF技术代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;resources xmlns:xliff=&quot;urn:oasis:names:tc:xliff:document:1.2&quot;&gt;</span><br><span class="line">    &lt;tech-list&gt;</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcA&lt;/tech&gt;</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.Ndef&lt;/tech&gt;</span><br><span class="line">    &lt;/tech-list&gt;</span><br><span class="line">&lt;/resources&gt;</span><br><span class="line"></span><br><span class="line">&lt;resources xmlns:xliff=&quot;urn:oasis:names:tc:xliff:document:1.2&quot;&gt;</span><br><span class="line">    &lt;tech-list&gt;</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.NfcB&lt;/tech&gt;</span><br><span class="line">        &lt;tech&gt;android.nfc.tech.Ndef&lt;/tech&gt;</span><br><span class="line">    &lt;/tech-list&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h2><p>做了这么多，终于可以在activity里面读取，写入nfc了，首先我们定义了NfcScanActivity来扫描nfc设备<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">  ......//关键代码，onCreate中</span><br><span class="line">  // 获取默认的NFC控制器</span><br><span class="line">  mAdapter = NfcAdapter.getDefaultAdapter(this);</span><br><span class="line">  if (mAdapter == null) &#123;</span><br><span class="line">      promt.setText(&quot;设备不支持NFC！&quot;);</span><br><span class="line">      return;</span><br><span class="line">  &#125;</span><br><span class="line">  if (!mAdapter.isEnabled()) &#123;</span><br><span class="line">      promt.setText(&quot;请在系统设置中先启用NFC功能！&quot;);</span><br><span class="line">      return;</span><br><span class="line">  &#125;</span><br><span class="line">  //创建intent检测nfc</span><br><span class="line">  mPendingIntent = PendingIntent</span><br><span class="line">          .getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);</span><br><span class="line">//onResume</span><br><span class="line">if (this.mAdapter == null)</span><br><span class="line">      return;</span><br><span class="line">  if (!this.mAdapter.isEnabled()) &#123;</span><br><span class="line">      promt.setText(&quot;请在系统设置中先启用NFC功能！&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">   //监听nfc设备</span><br><span class="line">  this.mAdapter.enableForegroundDispatch(this, this.mPendingIntent, null, null);</span><br></pre></td></tr></table></figure></p>
+<p>因为我们注册了Intent Filter，当扫描到设备后，系统会调用我们的app，进而会进入activity的onNewIntent(Intent paramIntent)方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public void onNewIntent(Intent intent) &#123;</span><br><span class="line">        setIntent(paramIntent);</span><br><span class="line">        //我们接受到消息啦，可以处理了</span><br><span class="line">// 得到是否检测到TAG触发</span><br><span class="line">        if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())</span><br><span class="line">                || NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())</span><br><span class="line">                || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) &#123;</span><br><span class="line">            // 处理该intent</span><br><span class="line">            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);</span><br><span class="line">            // 获取标签id数组</span><br><span class="line">            byte[] bytesId = tag.getId();</span><br><span class="line">            //获取消息内容</span><br><span class="line">            NfcMessageParser nfcMessageParser = new NfcMessageParser(intent);</span><br><span class="line">            List&lt;String&gt; tagMessage = nfcMessageParser.getTagMessage();</span><br><span class="line"></span><br><span class="line">            if (tagMessage == null || tagMessage.size() == 0) &#123;</span><br><span class="line"></span><br><span class="line">                //Toast.makeText(this, &quot;NFC格式不支持...&quot;, Toast.LENGTH_LONG).show();</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                for (int i = 0; i &lt; tagMessage.size(); i++) &#123;</span><br><span class="line">                    Log.e(&quot;tag&quot;, tagMessage.get(i));</span><br><span class="line">                &#125;</span><br><span class="line">                datas = tagMessage.get(0);</span><br><span class="line">            &#125;</span><br><span class="line">            String info = &quot;&quot;;</span><br><span class="line">            if (datas != null) &#123;</span><br><span class="line">                info += &quot;内容：&quot; + datas + &quot;\n卡片ID：&quot; + bytesToHexString(bytesId) + &quot;\n&quot;;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                info += &quot;内容：空&quot; + &quot;\n卡片ID：&quot; + bytesToHexString(bytesId) + &quot;\n&quot;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            String[] techList = tag.getTechList();</span><br><span class="line"></span><br><span class="line">            //分析NFC卡的类型： Mifare Classic/UltraLight Info</span><br><span class="line">            String cardType = &quot;&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            for (String aTechList : techList) &#123;</span><br><span class="line">                if (TextUtils.equals(aTechList, &quot;android.nfc.tech.Ndef&quot;)) &#123;</span><br><span class="line">                    Ndef ndef = Ndef.get(tag);</span><br><span class="line">                    cardType += &quot;最大数据尺寸:&quot; + ndef.getMaxSize() + &quot;字节&quot;;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            info += cardType;</span><br><span class="line"></span><br><span class="line">            promt.setText(&quot;NFC信息如下：\n&quot; + info);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>传来的intent中包含了：<br><a href="https://developer.android.google.cn/reference/android/nfc/NfcAdapter.html#EXTRA_TAG" target="_blank" rel="noopener">EXTRA_TAG</a>：一个<a href="https://developer.android.google.cn/reference/android/nfc/Tag.html" target="_blank" rel="noopener">Tag</a>对象，表示扫描标签。<br><a href="https://developer.android.google.cn/reference/android/nfc/NfcAdapter.html#EXTRA_NDEF_MESSAGES" target="_blank" rel="noopener">EXTRA_NDEF_MESSAGES</a>（可选）：从标签解析NDEF消息的数组，这个就是我们要的数据，显示到屏幕上。<br><a href="https://developer.android.google.cn/reference/android/nfc/NfcAdapter.html#EXTRA_ID" target="_blank" rel="noopener">EXTRA_ID</a>（可选）：标签的ID。<br>处理消息的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// 得到Intent中的NDEF数据</span><br><span class="line">    private NdefMessage[] getTagNdef(Intent intent) &#123;</span><br><span class="line">        // TODO Auto-generated method stub</span><br><span class="line">        NdefMessage[] msgs = null;</span><br><span class="line">        Parcelable[] rawMsgs = intent</span><br><span class="line">                .getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);</span><br><span class="line"></span><br><span class="line">        //把序列化数据转成Messaeg对象</span><br><span class="line">        if (rawMsgs != null) &#123;</span><br><span class="line">            msgs = new NdefMessage[rawMsgs.length];</span><br><span class="line">            for (int i = 0; i &lt; rawMsgs.length; i++) &#123;</span><br><span class="line">                msgs[i] = (NdefMessage) rawMsgs[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // Unknown tag type</span><br><span class="line">            byte[] empty = new byte[]&#123;&#125;;</span><br><span class="line">            NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty,</span><br><span class="line">                    empty, empty);</span><br><span class="line">            NdefMessage msg = new NdefMessage(new NdefRecord[]&#123;record&#125;);</span><br><span class="line">            msgs = new NdefMessage[]&#123;msg&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        return msgs;</span><br><span class="line">    &#125;</span><br><span class="line">     // 把Message转成List</span><br><span class="line">    private List&lt;String&gt; getNdefString(NdefMessage[] msgs) &#123;</span><br><span class="line">        // TODO Auto-generated method stub</span><br><span class="line">        if (msgs != null &amp;&amp; msgs.length != 0) &#123;</span><br><span class="line">            List&lt;String&gt; tagMessage = parser(msgs[0]);</span><br><span class="line">            return tagMessage;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后就可以显示到你想要的地方去了</p>
+<h2 id="写入数据"><a href="#写入数据" class="headerlink" title="写入数据"></a>写入数据</h2><h3 id="NdefRecord对象"><a href="#NdefRecord对象" class="headerlink" title="NdefRecord对象"></a>NdefRecord对象</h3><p>写入数据最关键的就是创建一个NdefRecord对象，然后通过Ndef对象的writeNdefMessage(NdefMessage message)方法写入,当然前提还是要检测到设备，这里格式是TNF_WELL_KNOWN with RTD_TEXT，即写入文本字符串，如果你想写入其他数据，请参考官方文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 创建record，格式为TNF_WELL_KNOWN with RTD_TEXT</span><br><span class="line">     *</span><br><span class="line">     * @param payload      你要写入的数据</span><br><span class="line">     * @param locale</span><br><span class="line">     * @param encodeInUtf8 编码</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">public NdefRecord createTextRecord(String payload, Locale locale, boolean encodeInUtf8) &#123;</span><br><span class="line">    byte[] langBytes = locale.getLanguage().getBytes(Charset.forName(&quot;US-ASCII&quot;));</span><br><span class="line">    Charset utfEncoding = encodeInUtf8 ? Charset.forName(&quot;UTF-8&quot;) : Charset.forName(&quot;UTF-16&quot;);</span><br><span class="line">    byte[] textBytes = payload.getBytes(utfEncoding);</span><br><span class="line">    int utfBit = encodeInUtf8 ? 0 : (1 &lt;&lt; 7);</span><br><span class="line">    char status = (char) (utfBit + langBytes.length);</span><br><span class="line">    byte[] data = new byte[1 + langBytes.length + textBytes.length];</span><br><span class="line">    data[0] = (byte) status;</span><br><span class="line">    System.arraycopy(langBytes, 0, data, 1, langBytes.length);</span><br><span class="line">    System.arraycopy(textBytes, 0, data, 1 + langBytes.length, textBytes.length);</span><br><span class="line">    NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,</span><br><span class="line">    NdefRecord.RTD_TEXT, new byte[0], data);</span><br><span class="line">    return record;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="生成需要的NdefMessage对象"><a href="#生成需要的NdefMessage对象" class="headerlink" title="生成需要的NdefMessage对象"></a>生成需要的NdefMessage对象</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> //textRecord就是上面生成的NdefRecord</span><br><span class="line">NdefMessage message = new NdefMessage(new NdefRecord[]&#123;textRecord&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="最后写入数据："><a href="#最后写入数据：" class="headerlink" title="最后写入数据："></a>最后写入数据：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 写入数据</span><br><span class="line">     * @param message</span><br><span class="line">     * @param tag  intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    boolean writeTag(NdefMessage message, Tag tag) &#123;</span><br><span class="line">        int size = message.toByteArray().length;</span><br><span class="line">        try &#123;</span><br><span class="line">            //链接nfc</span><br><span class="line">            Ndef ndef = Ndef.get(tag);</span><br><span class="line">            if (ndef != null) &#123;</span><br><span class="line">                ndef.connect();</span><br><span class="line">                if (!ndef.isWritable()) &#123;</span><br><span class="line">Toast.makeText(this, &quot;tag不允许写入&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                 </span><br><span class="line">                    return false;</span><br><span class="line">                &#125;</span><br><span class="line">                if (ndef.getMaxSize() &lt; size) &#123;</span><br><span class="line">Toast.makeText(this,&quot;文件大小超出容量&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                 </span><br><span class="line">                    return false;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                ndef.writeNdefMessage(message);</span><br><span class="line">Toast.makeText(this,&quot;写入数据成功.&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">           </span><br><span class="line">                isWrite = false;</span><br><span class="line">                finish();</span><br><span class="line">                return true;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                NdefFormatable format = NdefFormatable.get(tag);</span><br><span class="line">                if (format != null) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        format.connect();</span><br><span class="line">                        format.format(message);</span><br><span class="line">                        Toast.makeText(this,&quot;格式化tag并且写入message&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                      </span><br><span class="line">                        return true;</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                            Toast.makeText(this, &quot;格式化tag失败.&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">                      </span><br><span class="line">                        return false;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                        Toast.makeText(this, &quot;Tag不支持NDEF&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">               </span><br><span class="line">                    return false;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">                Toast.makeText(this,&quot;写入数据失败&quot;, Toast.LENGTH_SHORT).show();</span><br><span class="line">          </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="完整代码已上传至github，欢迎clone，谢谢star"><a href="#完整代码已上传至github，欢迎clone，谢谢star" class="headerlink" title="完整代码已上传至github，欢迎clone，谢谢star"></a>完整代码已上传至<a href="https://github.com/dengyuaner/AndroidNFCDemo" target="_blank" rel="noopener">github</a>，欢迎clone，谢谢star</h2>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-15T05:27:12.475Z" itemprop="dateUpdated">2018-04-15 13:27:12</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NFC/">NFC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/近场通讯/">近场通讯</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/nfc2/&title=《Android近场通讯——NFC(二)》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/nfc2/&title=《Android近场通讯——NFC(二)》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/nfc2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android近场通讯——NFC(二)》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/nfc2/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/nfc2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/04/15/listview2/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">listview相关问题——只更新某一个item</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/15/nfc1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android近场通讯——NFC(一)</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/nfc2/&title=《Android近场通讯——NFC(二)》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/nfc2/&title=《Android近场通讯——NFC(二)》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/nfc2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android近场通讯——NFC(二)》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/nfc2/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/nfc2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwElEQVR42u3aMZLDIAwF0Nz/0tmZ1Gv8JdnYxaPyJDE8UmiExOcTj+9vHD0n367funjg4uKOud/lSIhHs60/X2/scBVcXNyN3CR4JVtKNramn9hwcXFfxu1t76o5cXFx38nNl8+TIVxc3Ddze+lLXijJP7nsrIaLizvgzgum8+et9V1cXNxBV2IdUHol0dHquLi4W7jriZKjSIJI3s1LqLi4uHdz10nGpBGSF0SSTAYXF/dZ7vwAM7mqdaLCxcV9iFstiMzbLYXZcHFxX8OdJC4JrhAWcXFxt3CrhcveUWfSJRk1VHBxcVvcfOG8rZKnPnmhBBcX9ylu9XrW5NpW9djzT0aGi4t7G7fQxggSkWTzvYIILi7uTu4drF5bJSq54uLibuFWm6m9axZ5YhSVaHFxcW/mVgNZ76JV/kecbAkXF3cjt7pk1J8pNmgLgQwXF3cLt9pkzbsb8983u8G4uLgDbjWgVJsuyfWs5FJXeTO4uLhjbm/5HFQttp4EOFxc3I3cO+5BnTRFekcmXFzcl3HzAmge4G4MZLi4uA9xrwVF5RhcXNyN3En6UqVPgiMuLu4ebrVg2kt0qjhcXNyHuH8Z4mzDrNtJtQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

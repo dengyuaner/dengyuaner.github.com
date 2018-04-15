@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android近场通讯——NFC(一) | 又尔enter的blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,NFC,近场通讯">
+    <meta name="description" content="前言&amp;emsp;&amp;emsp;NFC（Near Field Communication 近场通讯），它是前几年逐渐起来的一种技术，出来之后，感觉一直不温不火的样子。直到最近有个朋友需要手机与nfc标签读写信息，让我帮忙，所以才了解这门技术，下面我们一起来了解并学习一下。官方文档 近场通讯&amp;emsp;&amp;emsp;大家都知道android近场通讯包括我们最熟知的wifi，蓝牙，还有已经慢慢消失的红外，最">
+<meta name="keywords" content="Android,NFC,近场通讯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android近场通讯——NFC(一)">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/nfc1/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;NFC（Near Field Communication 近场通讯），它是前几年逐渐起来的一种技术，出来之后，感觉一直不温不火的样子。直到最近有个朋友需要手机与nfc标签读写信息，让我帮忙，所以才了解这门技术，下面我们一起来了解并学习一下。官方文档 近场通讯&amp;emsp;&amp;emsp;大家都知道android近场通讯包括我们最熟知的wifi，蓝牙，还有已经慢慢消失的红外，最">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-406ac40629b31ff6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-a799d2711eb454b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-639426c951292b51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-15T05:45:57.582Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android近场通讯——NFC(一)">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;NFC（Near Field Communication 近场通讯），它是前几年逐渐起来的一种技术，出来之后，感觉一直不温不火的样子。直到最近有个朋友需要手机与nfc标签读写信息，让我帮忙，所以才了解这门技术，下面我们一起来了解并学习一下。官方文档 近场通讯&amp;emsp;&amp;emsp;大家都知道android近场通讯包括我们最熟知的wifi，蓝牙，还有已经慢慢消失的红外，最">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3287039-406ac40629b31ff6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android近场通讯——NFC(一)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android近场通讯——NFC(一)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-15T05:07:18.000Z" itemprop="datePublished" class="page-time">
+  2018-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#近场通讯"><span class="post-toc-number">2.</span> <span class="post-toc-text">近场通讯</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#emsp-emsp-读卡器模式（Reader-Writer-Mode）"><span class="post-toc-number">3.</span> <span class="post-toc-text">  读卡器模式（Reader/Writer Mode）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#emsp-emsp-仿真卡模式（Card-Emulation-Mode）"><span class="post-toc-number">4.</span> <span class="post-toc-text">  仿真卡模式（Card Emulation Mode）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#emsp-emsp-点对点模式（P2P-Mode）"><span class="post-toc-number">5.</span> <span class="post-toc-text">  点对点模式（P2P Mode）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nfc标签"><span class="post-toc-number">6.</span> <span class="post-toc-text">nfc标签</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nfc分发"><span class="post-toc-number">7.</span> <span class="post-toc-text">nfc分发</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ACTION-NDEF-DISCOVERED："><span class="post-toc-number">7.1.</span> <span class="post-toc-text">ACTION_NDEF_DISCOVERED：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ACTION-TECH-DISCOVERED："><span class="post-toc-number">7.2.</span> <span class="post-toc-text">ACTION_TECH_DISCOVERED：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ACTION-TAG-DISCOVERED："><span class="post-toc-number">7.3.</span> <span class="post-toc-text">ACTION_TAG_DISCOVERED：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标签调度系统工作的基本方法如下："><span class="post-toc-number">8.</span> <span class="post-toc-text">标签调度系统工作的基本方法如下：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#下一篇Android-NFC-二"><span class="post-toc-number">9.</span> <span class="post-toc-text">下一篇Android NFC(二)</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-nfc1"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android近场通讯——NFC(一)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-15 13:07:18" datetime="2018-04-15T05:07:18.000Z"  itemprop="datePublished">2018-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;NFC（Near Field Communication 近场通讯），它是前几年逐渐起来的一种技术，出来之后，感觉一直不温不火的样子。直到最近有个朋友需要手机与nfc标签读写信息，让我帮忙，所以才了解这门技术，下面我们一起来了解并学习一下。<br><a href="https://developer.android.google.cn/guide/topics/connectivity/nfc/nfc.html" target="_blank" rel="noopener">官方文档</a></p>
+<h2 id="近场通讯"><a href="#近场通讯" class="headerlink" title="近场通讯"></a>近场通讯</h2><p>&emsp;&emsp;大家都知道android近场通讯包括我们最熟知的wifi，蓝牙，还有已经慢慢消失的红外，最后就是我们今天的主角nfc了，nfc与其他通信类型不同的是要求距离不能超过4cm（不同的nfc标签略有差别），查看官方文档，我们知道nfc通信的模式有一下三种：</p>
+<h2 id="emsp-emsp-读卡器模式（Reader-Writer-Mode）"><a href="#emsp-emsp-读卡器模式（Reader-Writer-Mode）" class="headerlink" title="&emsp;&emsp;读卡器模式（Reader/Writer Mode）"></a>&emsp;&emsp;读卡器模式（Reader/Writer Mode）</h2><h2 id="emsp-emsp-仿真卡模式（Card-Emulation-Mode）"><a href="#emsp-emsp-仿真卡模式（Card-Emulation-Mode）" class="headerlink" title="&emsp;&emsp;仿真卡模式（Card Emulation Mode）"></a>&emsp;&emsp;仿真卡模式（Card Emulation Mode）</h2><h2 id="emsp-emsp-点对点模式（P2P-Mode）"><a href="#emsp-emsp-点对点模式（P2P-Mode）" class="headerlink" title="&emsp;&emsp;点对点模式（P2P Mode）"></a>&emsp;&emsp;点对点模式（P2P Mode）</h2><h2 id="nfc标签"><a href="#nfc标签" class="headerlink" title="nfc标签"></a>nfc标签</h2><p>&emsp;&emsp;今天主要讲的是读写模式，在开始写代码之前，有必要了解nfc的标签调度系统，标签调度系统如何解析NFC标签和特殊的工作，当它检测到NDEF消息的标记调度系统一样。NFC标签来在广泛的技术和还可以有许多不同的方式写入到其中的数据。机器人具有用于NDEF标准NDEF数据被封装的消息（内部NdefMessage），其中包含一个或多个记录（NdefRecord）。每个NDEF记录必须根据您要创建的记录类型的规格良好的。Android版 ​​还支持其它类型的标签不包含NDEF的数据，您可以通过在使用类的工作android.nfc.tech包。要了解更多有关这些技术，请参阅高级NFC主题。这些其他类型的标签工作包括编写你自己的协议栈与标签进行通信，因此，我们建议使用NDEF在可能的情况，便于开发和最大支持Android的供电设备。</p>
+<p>现在，你有NFC标签的背景，下面的章节详细描述了Android的如何处理NDEF格式化的标签。<br>当一个Android设备扫描包含NDEF格式的数据的NFC标签，它解析该消息并试图找出数据的MIME类型或标识的URI。要做到这一点，系统读取所述第一<a href="https://developer.android.google.cn/reference/android/nfc/NdefRecord.html" target="_blank" rel="noopener">NdefRecord</a><br>内部的<a href="https://developer.android.google.cn/reference/android/nfc/NdefMessage.html" target="_blank" rel="noopener">NdefMessage</a>，以确定如何解释整个NDEF消息（一个NDEF消息可以有多个NDEF记录）。<br>在一个结构良好的NDEF消息，第一个<a href="https://developer.android.google.cn/reference/android/nfc/NdefRecord.html" target="_blank" rel="noopener">NdefRecord</a></p>
+<p>包含以下字段：</p>
+<p>3-bit TNF (Type Name Format) :指示如何解释可变长度类型字段</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-406ac40629b31ff6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="0HF]EHB8]IQN5AC1BFIAY3M.png" title="">
+                </div>
+                <div class="image-caption">0HF]EHB8]IQN5AC1BFIAY3M.png</div>
+            </figure>
+<p>Variable length type:描述了记录的类型。如果使用TNF_WELL_KNOWN，使用此字段指定记录类型定义（RTD）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-a799d2711eb454b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ZMUO)G4X)HRB%ZH0)DK_7J1.png" title="">
+                </div>
+                <div class="image-caption">ZMUO)G4X)HRB%ZH0)DK_7J1.png</div>
+            </figure>
+<p>Variable length payload:要读取或写入的实际数据的有效载荷。一个NDEF消息可以包含多个NDEF记录，所以不承担全部有效载荷在NDEF消息的第一NDEF纪录。</p>
+<h2 id="nfc分发"><a href="#nfc分发" class="headerlink" title="nfc分发"></a>nfc分发</h2><p>&emsp;&emsp;说了这么多，Android系统是怎么检测到nfc靠近并通知相应的应用程序呢？其实就是用的Intent Filter,当我们在AndroidManifest.xml的activity中注册了相应的nfc intent后，当有相应的action来临时，系统就会把nfc分发到该App中，如果有多个App符合要求，则系统会弹出对话框让用户选择。标签调度系统定义了三个意图，优先级从高到低如下：</p>
+<h3 id="ACTION-NDEF-DISCOVERED："><a href="#ACTION-NDEF-DISCOVERED：" class="headerlink" title="ACTION_NDEF_DISCOVERED："></a>ACTION_NDEF_DISCOVERED：</h3><p>&emsp;&emsp;本意图是用来启动一个活动时，它包含一个NDEF净荷标签的扫描和是一个公认的类型。<br>&emsp;&emsp;这是最高优先级的意图，并且标签调度系统尝试尽可能任何其他意图，之前启动这一意图的活动。</p>
+<h3 id="ACTION-TECH-DISCOVERED："><a href="#ACTION-TECH-DISCOVERED：" class="headerlink" title="ACTION_TECH_DISCOVERED："></a>ACTION_TECH_DISCOVERED：</h3><p>&emsp;&emsp;如果没有App注册过ACTION_NDEF_DISCOVERED，标签调度系统试图启动与此意向的应用程序。此意向也直接启动（不启动ACTION_NDEF_DISCOVERED在前），如果被扫描的标签包含无法映射到MIME类型或URI，或者如果标签不包含NDEF数据，但是是一个已知的标签技术NDEF数据。</p>
+<h3 id="ACTION-TAG-DISCOVERED："><a href="#ACTION-TAG-DISCOVERED：" class="headerlink" title="ACTION_TAG_DISCOVERED："></a>ACTION_TAG_DISCOVERED：</h3><p>&emsp;&emsp;如果没有活动处理这一意图已启动ACTION_NDEF_DISCOVERED或ACTION_TECH_DISCOVERED意图。</p>
+<h2 id="标签调度系统工作的基本方法如下："><a href="#标签调度系统工作的基本方法如下：" class="headerlink" title="标签调度系统工作的基本方法如下："></a>标签调度系统工作的基本方法如下：</h2><p>&emsp;&emsp;1.尝试启动与由标签调度系统解析NFC标签时（无论是创建一个意图活动ACTION_NDEF_DISCOVERED或ACTION_TECH_DISCOVERED）。</p>
+<p>&emsp;&emsp;2.如果这一意图没有活动过滤器，尝试下一个优先级最低的意图（无论是启动一个活动ACTION_TECH_DISCOVERED或ACTION_TAG_DISCOVERED，直到意图或直至标签调度系统中的应用程序过滤器尝试所有可能的目的。</p>
+<p>&emsp;&emsp;3.如果没有应用程序筛选任何意图的，什么也不做。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-639426c951292b51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="nfc_tag_dispatch.png" title="">
+                </div>
+                <div class="image-caption">nfc_tag_dispatch.png</div>
+            </figure>
+<p>只要有可能，以NDEF消息和工作ACTION_NDEF_DISCOVERED的意图，因为它是最特定出的三个。<br>此意向，您可以在比其他两个意图更适当的时间启动应用程序，给用户更好的体验。</p>
+<h2 id="下一篇Android-NFC-二"><a href="#下一篇Android-NFC-二" class="headerlink" title="下一篇Android NFC(二)"></a>下一篇<a href="https://www.dyenter.top/2018/04/15/nfc2/" target="_blank" rel="noopener">Android NFC(二)</a></h2>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-15T05:45:57.582Z" itemprop="dateUpdated">2018-04-15 13:45:57</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NFC/">NFC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/近场通讯/">近场通讯</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/nfc1/&title=《Android近场通讯——NFC(一)》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/nfc1/&title=《Android近场通讯——NFC(一)》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/nfc1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android近场通讯——NFC(一)》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/nfc1/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/nfc1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/04/15/nfc2/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Android近场通讯——NFC(二)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/15/listview/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">listview相关问题——item包含EditText</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/nfc1/&title=《Android近场通讯——NFC(一)》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/nfc1/&title=《Android近场通讯——NFC(一)》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/nfc1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android近场通讯——NFC(一)》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/nfc1/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/nfc1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3aQW7DMAwEwPz/0y7Qaxp3l7KVBBidCiFQRxeC5urxiNfxu853nvePp/W8/7hj4eLiLnOP0/UKkZx2vn9+sZdXwsXF3cjNS1L+mxn9HxsuLu6HcdvCl1wPFxf327nJBZJ2BxcX91u4bWFKiLPTLvtWw8XFXeC2A9M7/r5xvouLi1tyj3KtlKG25P1xDi4u7hbuLEDNo5SE245QcXFx93DbkCPfKYYdwYVxcXH3cPMSNitk7VOtf1S4uLhv5batySxYTf5vVMhwcXEv5bYxRjG8iHH56AQXF3cPdyU0vTbJKdJgXFzcLdy2TZk94cpPqGc2uLi4t3HztqMNQtqe6+VpuLi4G7l5KWnbnSTDwcXF/XxuW2jyMcpKM4SLi7uT20Yd7adLUvjqWBcXF/dm7noxakeibTOEi4v7Lu6MtfLhNItYcHFxd3LzlQw9kyHI+SOMYZSCi4t7EfeqBqWNT/KIZdhU4eLiLnNXotbZ847zQlY8z8LFxb2Z27YjecRSP8DK57u4uLgfwF15kDGLWJYKGS4u7kbubEQya25wcXHfy10qLqdhSTt4vWwsgouLu8CdDUzzj5z8N5c9+MDFxZ1zfwBq2yUL8fdqkgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

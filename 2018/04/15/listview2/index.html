@@ -14,25 +14,25 @@
     
     
     
-    <title>测试中文title | 又尔enter的blog</title>
+    <title>listview相关问题——只更新某一个item | 又尔enter的blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="PS3,Games">
-    <meta name="description" content="Document     哈哈，测试中文！！！">
-<meta name="keywords" content="PS3,Games">
+    <meta name="keywords" content="Android,ListView,EditText">
+    <meta name="description" content="我们都知道，更新listview通常调用修改adapter的数据源，然后调用adapter的notifyDataSetChanged(); 但是有时候只是需要更新某一个指定的item，比如微信聊天应用中。这个时候，我们不需要去调用Adapter的notifyDataSetChanged（）方法。可以写一个updateItem(int position)的方法去更新指定项,这样代价就会小一些。 那么">
+<meta name="keywords" content="Android,ListView,EditText">
 <meta property="og:type" content="article">
-<meta property="og:title" content="测试中文title">
-<meta property="og:url" content="http://yoursite.com/2018/04/15/test/index.html">
+<meta property="og:title" content="listview相关问题——只更新某一个item">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/listview2/index.html">
 <meta property="og:site_name" content="又尔enter的blog">
-<meta property="og:description" content="Document     哈哈，测试中文！！！">
+<meta property="og:description" content="我们都知道，更新listview通常调用修改adapter的数据源，然后调用adapter的notifyDataSetChanged(); 但是有时候只是需要更新某一个指定的item，比如微信聊天应用中。这个时候，我们不需要去调用Adapter的notifyDataSetChanged（）方法。可以写一个updateItem(int position)的方法去更新指定项,这样代价就会小一些。 那么">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-15T02:53:32.236Z">
+<meta property="og:updated_time" content="2018-04-15T05:29:41.195Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="测试中文title">
-<meta name="twitter:description" content="Document     哈哈，测试中文！！！">
+<meta name="twitter:title" content="listview相关问题——只更新某一个item">
+<meta name="twitter:description" content="我们都知道，更新listview通常调用修改adapter的数据源，然后调用adapter的notifyDataSetChanged(); 但是有时候只是需要更新某一个指定的item，比如微信聊天应用中。这个时候，我们不需要去调用Adapter的notifyDataSetChanged（）方法。可以写一个updateItem(int position)的方法去更新指定项,这样代价就会小一些。 那么">
     
         <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
     
@@ -127,7 +127,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">测试中文title</div>
+        <div class="flex-col header-title ellipsis">listview相关问题——只更新某一个item</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -149,15 +149,15 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">测试中文title</h1>
+        <h1 class="title">listview相关问题——只更新某一个item</h1>
         <h5 class="subtitle">
             
-                <time datetime="2018-04-14T16:06:14.977Z" itemprop="datePublished" class="page-time">
+                <time datetime="2018-04-15T05:28:27.000Z" itemprop="datePublished" class="page-time">
   2018-04-15
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Test/">Test</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
 
             
         </h5>
@@ -172,16 +172,16 @@
 <div class="container body-wrap">
     
 
-<article id="post-test"
+<article id="post-listview2"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">测试中文title</h1>
+        <h1 class="post-card-title">listview相关问题——只更新某一个item</h1>
         <div class="post-meta">
-            <time class="post-time" title="2018-04-15 00:06:14" datetime="2018-04-14T16:06:14.977Z"  itemprop="datePublished">2018-04-15</time>
+            <time class="post-time" title="2018-04-15 13:28:27" datetime="2018-04-15T05:28:27.000Z"  itemprop="datePublished">2018-04-15</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Test/">Test</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
 
 
 
@@ -193,7 +193,9 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <html lang="en"><br> <head><br>  <meta charset="UTF-8"><br>  <meta name="Generator" content="EditPlus®"><br>  <meta name="Author" content=""><br>  <meta name="Keywords" content=""><br>  <meta name="Description" content=""><br>  <title>Document</title><br> </head><br> <body><br>   哈哈，测试中文！！！<br> </body><br></html>
+            <p>我们都知道，更新listview通常调用修改adapter的数据源，然后调用adapter的notifyDataSetChanged();</p>
+<p>但是有时候只是需要更新某一个指定的item，比如微信聊天应用中。这个时候，我们不需要去调用Adapter的notifyDataSetChanged（）方法。可以写一个updateItem(int position)的方法去更新指定项,这样代价就会小一些。</p>
+<p>那么我们怎么拿到这个item然后去更新它的数据呢，其实listview提供了getChildAt(int index)方法让我们去获取，这个方法其实是ViewGroup的方法。并且由于一般使用了ViewHolder缓存机制，所以我们获取子item的时候要注意在可见区域的position去获取。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void updataItem(int position) &#123;</span><br><span class="line">      int firstVisiblePos = listView.getFirstVisiblePosition();</span><br><span class="line">      int lastVisibalePos = listView.getLastVisiblePosition();</span><br><span class="line">      if (position &gt;= firstVisiblePos &amp;&amp; position &lt;= lastVisibalePos) &#123;</span><br><span class="line">          View view = listView.getChildAt(position - firstVisiblePos);</span><br><span class="line">          ViewHolder viewHolder = (ViewHolder) view.getTag();</span><br><span class="line">          //然后使用viewholder去更新需要更新的view。 </span><br><span class="line">          //TextView textView = (TextView) viewHolder.findViewById(R.id.textView);</span><br><span class="line">          //textView.setText(&quot;11111&quot;);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
 
         </div>
 
@@ -202,7 +204,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-04-15T02:53:32.236Z" itemprop="dateUpdated">2018-04-15 10:53:32</time>
+    最后更新时间：<time datetime="2018-04-15T05:29:41.195Z" itemprop="dateUpdated">2018-04-15 13:29:41</time>
 </span><br>
 
 
@@ -226,7 +228,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Games/">Games</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PS3/">PS3</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EditText/">EditText</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ListView/">ListView</a></li></ul>
 
 
             
@@ -236,7 +238,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/test/&title=《测试中文title》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/listview2/&title=《listview相关问题——只更新某一个item》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -246,22 +248,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/test/&title=《测试中文title》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/listview2/&title=《listview相关问题——只更新某一个item》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/test/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/listview2/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《测试中文title》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/test/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《listview相关问题——只更新某一个item》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/listview2/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/test/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/listview2/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -284,18 +286,18 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2018/04/15/grid/" id="post-prev" class="post-nav-link">
+      <a href="/2018/04/15/audio1/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">表格筛选控件</h4>
+        <h4 class="title">Android音频开发（一）——基础知识</h4>
       </a>
     </div>
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2018/04/14/hello-world/" id="post-next" class="post-nav-link">
+      <a href="/2018/04/15/nfc2/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">Hello World</h4>
+        <h4 class="title">Android近场通讯——NFC(二)</h4>
       </a>
     </div>
   
@@ -416,7 +418,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/test/&title=《测试中文title》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/listview2/&title=《listview相关问题——只更新某一个item》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -426,22 +428,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/test/&title=《测试中文title》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/listview2/&title=《listview相关问题——只更新某一个item》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/test/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/listview2/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《测试中文title》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/test/&via=http://yoursite.com" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《listview相关问题——只更新某一个item》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/listview2/&via=http://yoursite.com" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/test/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/listview2/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -452,7 +454,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzklEQVR42u3aQWrEMAwF0N7/0lPoqjCM+yXFTgovqzAE53kWQtbP11d8vX6u3/fvv6yfXK9w8YWLizvmvpbXOyJfbf37emMft4SLi3uQmxev9fNJwcr/Dlxc3Odz8+K1hubr4+LiPp+bNChJu4OLi/tfuMnhJzkaJUUtXx8XF/cubm9geu399vkuLi7uRanEuqCsG5re83+8HRcX9wh3vVA+/kjQyYgkKnO4uLibudUjStIA5QPWvJPBxcW9i1sNU6uxSl7mPm4eFxf3CDeJPfJPLqrBai+mxcXF3c2txhVJBNKbfCY9DC4u7kluUsiqEUsvqonSYFxc3M3cvJWpHl2qrx8Frri4uBu4eaTRy2oKTUyyMi4u7mZu9ZX5yCMvZLi4uM/kVluZPGLJm6HoT8HFxT3C7fVE1SNNb/OFQAUXF/dS7oTVK2rVZggXF/cubvVl8zi2uQ4uLu5Bbn71PqpIcpBoG7i4uEe41YIyv69GLKPEGBcXd8BNilev6ekdrqKvyXBxcY9we19AVYPV+SEKFxf3adzeuHMSsYwKGS4u7k3cfOTRa25wcXHv5U6KS3JMqh6oLhiL4OLiDrjVgWn184vqJvNWCRcXdwP3G0p+LuULeIHeAAAAAElFTkSuQmCC" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3aQW6DMBAFUO5/aSpl1UqN+8djO6h6XkVA4MHiy57xdcXjfo38yP1tjI9cOwYuLm6bew/HmPLukfk1uQEXF/c8N7ld9ez45ZNQw8XFfT73XbhUr8TFxf1P3HwqM46t6v1xcXE/xc0nJfteb/FaDRcXt8GtFkx3/N5Y38XFxS1y7/bImyjVIukvz8LFxT3CHS9OOqGWR1W5+YqLi7uZm7dA8q0V+XdKyiU/juDi4h7h5sXNJEnmGq55uQQXF/cMtxpkSTDNnY02deHi4h7h9muVnZjb3krBxcWd4uZTkzyY8ulLXnzBxcU9ya3eNF/AVF84D0dcXNzd3Lmm6drGaqE9g4uLe4Q7t1CptknyWCys2HBxcY9wV6Gr/22VYnFxcT/ETW6Rx1b+USIJLi7uZm5eMJ0rjuTbNaLPh4uLe5xbbaP2GzALukC4uLiLuHOFibxskZdZo7jExcU9wp1LvuqUJW/G4OLiPoebh1ceQP3vV9gngouLu43bCa+8LJKH5h97RnBxcR/JnYuqubhcEGS4uLjbuHNFkM6ypzXFwcXFbXPzImk/tlobQ3FxcY9wJ7uy8VaJ6n/zVg0uLu4G7he5l3adUnpM3gAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android音频开发（一）——基础知识 | 又尔enter的blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,音视频,NDK">
+    <meta name="description" content="前言&amp;emsp;&amp;emsp;前几天看到一个新闻说陌陌靠直播盈利了，在以前的印象中，陌陌只是一个那啥的软件，现在居然靠直播营收，说明现在直播的火热，因此我们有必要了解下Android音视频方面的知识。我们先了解一下音频。 音频的基本概念采样率（sampleRateInHz）&amp;emsp;&amp;emsp;我们知道，自然界中的声音是连续的模拟信号，而计算机只能识别二进制，因此需要把模拟信号转化为数字信号，这个">
+<meta name="keywords" content="Android,音视频,NDK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android音频开发（一）——基础知识">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/audio1/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;前几天看到一个新闻说陌陌靠直播盈利了，在以前的印象中，陌陌只是一个那啥的软件，现在居然靠直播营收，说明现在直播的火热，因此我们有必要了解下Android音视频方面的知识。我们先了解一下音频。 音频的基本概念采样率（sampleRateInHz）&amp;emsp;&amp;emsp;我们知道，自然界中的声音是连续的模拟信号，而计算机只能识别二进制，因此需要把模拟信号转化为数字信号，这个">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-ce1ce1c488ff7fcd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-15T05:36:47.692Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android音频开发（一）——基础知识">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;前几天看到一个新闻说陌陌靠直播盈利了，在以前的印象中，陌陌只是一个那啥的软件，现在居然靠直播营收，说明现在直播的火热，因此我们有必要了解下Android音视频方面的知识。我们先了解一下音频。 音频的基本概念采样率（sampleRateInHz）&amp;emsp;&amp;emsp;我们知道，自然界中的声音是连续的模拟信号，而计算机只能识别二进制，因此需要把模拟信号转化为数字信号，这个">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3287039-ce1ce1c488ff7fcd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android音频开发（一）——基础知识</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android音频开发（一）——基础知识</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-15T05:30:33.000Z" itemprop="datePublished" class="page-time">
+  2018-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/">NDK</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#音频的基本概念"><span class="post-toc-number">2.</span> <span class="post-toc-text">音频的基本概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#采样率（sampleRateInHz）"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">采样率（sampleRateInHz）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#采样精度（位宽audioFormat）"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">采样精度（位宽audioFormat）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#声道数（channelConfig）"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">声道数（channelConfig）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#音频帧（bufferSizeInBytes）"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">音频帧（bufferSizeInBytes）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#编码"><span class="post-toc-number">3.</span> <span class="post-toc-text">编码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android应用层提供的API"><span class="post-toc-number">4.</span> <span class="post-toc-text">Android应用层提供的API</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#下一节，我们将讲述怎么录制音频"><span class="post-toc-number">5.</span> <span class="post-toc-text">下一节，我们将讲述怎么录制音频</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-audio1"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android音频开发（一）——基础知识</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-15 13:30:33" datetime="2018-04-15T05:30:33.000Z"  itemprop="datePublished">2018-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/NDK/">NDK</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;前几天看到一个新闻说陌陌靠直播盈利了，在以前的印象中，陌陌只是一个那啥的软件，现在居然靠直播营收，说明现在直播的火热，因此我们有必要了解下Android音视频方面的知识。我们先了解一下音频。</p>
+<h2 id="音频的基本概念"><a href="#音频的基本概念" class="headerlink" title="音频的基本概念"></a>音频的基本概念</h2><h3 id="采样率（sampleRateInHz）"><a href="#采样率（sampleRateInHz）" class="headerlink" title="采样率（sampleRateInHz）"></a>采样率（sampleRateInHz）</h3><p>&emsp;&emsp;我们知道，自然界中的声音是连续的模拟信号，而计算机只能识别二进制，因此需要把模拟信号转化为数字信号，这个过程就叫做采样。顾名思义，就是选取一些间断的点来转化。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-ce1ce1c488ff7fcd.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="d53f8794a4c27d1e5f214be71bd5ad6eddc43889.jpg" title="">
+                </div>
+                <div class="image-caption">d53f8794a4c27d1e5f214be71bd5ad6eddc43889.jpg</div>
+            </figure><br>&emsp;&emsp;如上图，当采样周期越短，即采样率越高，选取的点越多，则存储到计算机中的声音播放出来的效果更接近原声，根据奈奎斯特理论，采样频率只要不低于音频信号最高频率的两倍，就可以无损失地还原原始的声音，所以采样率越高越好吗？<br>当然不是，通常人耳能听到频率范围大约在20Hz～20kHz之间的声音，为了保证声音不失真，采样频率应在40kHz以上。常用的音频采样频率有：8kHz、11.025kHz、22.05kHz、16kHz、37.8kHz、44.1kHz、48kHz、96kHz、192kHz等。</p>
+<h3 id="采样精度（位宽audioFormat）"><a href="#采样精度（位宽audioFormat）" class="headerlink" title="采样精度（位宽audioFormat）"></a>采样精度（位宽audioFormat）</h3><p>&emsp;&emsp;上图中，每一个红色的采样点，都需要用一个数值来表示大小，这个数值的数据类型大小可以是：4bit、8bit、16bit、32bit等等，位数越多，表示得就越精细，声音质量自然就越好，当然，数据量也会成倍增大。为了保持android各个版本的兼容性，一般选择16bit。</p>
+<h3 id="声道数（channelConfig）"><a href="#声道数（channelConfig）" class="headerlink" title="声道数（channelConfig）"></a>声道数（channelConfig）</h3><p>&emsp;&emsp;声道数是指支持能不同发声的音响的个数，常见的有单通道，双通道，立体声四通道等</p>
+<h3 id="音频帧（bufferSizeInBytes）"><a href="#音频帧（bufferSizeInBytes）" class="headerlink" title="音频帧（bufferSizeInBytes）"></a>音频帧（bufferSizeInBytes）</h3><p>&emsp;&emsp;大家都知道视频帧就是一幅图像，音频的帧的概念没有视频帧那么清晰，几乎所有视频编码格式都可以简单的认为一帧就是编码后的一副图像。但音频帧跟编码格式相关，它是各个编码标准自己实现的。在实际的应用中，为了音频算法处理/传输的方便，一般约定俗成取2.5ms~60ms为单位的数据量为一帧音频。这个时间被称之为“采样时间”，其长度没有特别的标准，它是根据编解码器和具体应用的需求来决定的，我们可以计算一下一帧音频帧的大小：<br>假设某音频信号是采样率为44.1kHz、双通道、位宽为16bit，40ms一帧，则一帧音频数据的大小为：<br>                          int size =44100 x 2 x 16bit x 0.04s = 56488 bit = 7056 byte</p>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>&emsp;&emsp;android中采集音频后得到的是原始的PCM数据，这些数据代表着无损的原始数字音频信号，添加一些文件头信息，就可以存储为WAV文件了，它是一种由微软和IBM联合开发的用于音频数字存储的标准，可以很容易地被解析和播放。而其他格式如mp3等要经过编码后才能播放，编码的目的就是去除冗余信息。所以，一般你会发现你把mp3格式的音频转为wav后体积会变很大。</p>
+<p>&emsp;&emsp;再简单介绍一下音频数据压缩的最基本的原理：因为有冗余信息，所以可以压缩。</p>
+<p>&emsp;&emsp;（1） 频谱掩蔽效应： 人耳所能察觉的声音信号的频率范围为20Hz～20KHz，在这个频率范围以外的音频信号属于冗余信号。<br>&emsp;&emsp;（2） 时域掩蔽效应： 当强音信号和弱音信号同时出现时，弱信号会听不到，因此，弱音信号也属于冗余信号。</p>
+<h2 id="Android应用层提供的API"><a href="#Android应用层提供的API" class="headerlink" title="Android应用层提供的API"></a>Android应用层提供的API</h2><p>&emsp;&emsp;android提供了很多丰富的类供我们处理音频，而这些类实际上是通过jni调用了c/c++的函数。</p>
+<p>&emsp;&emsp;音频采集： MediaRecoder，AudioRecord</p>
+<p>&emsp;&emsp;音频播放： SoundPool，MediaPlayer，AudioTrack </p>
+<p>&emsp;&emsp;音频编解码： MediaCodec</p>
+<p>&emsp;&emsp;NDK API： OpenSL ES</p>
+<h2 id="下一节，我们将讲述怎么录制音频"><a href="#下一节，我们将讲述怎么录制音频" class="headerlink" title="下一节，我们将讲述怎么录制音频"></a><a href="https://www.dyenter.top/2018/04/15/audio2/" target="_blank" rel="noopener">下一节</a>，我们将讲述怎么录制音频</h2>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-15T05:36:47.692Z" itemprop="dateUpdated">2018-04-15 13:36:47</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NDK/">NDK</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/音视频/">音视频</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/audio1/&title=《Android音频开发（一）——基础知识》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/audio1/&title=《Android音频开发（一）——基础知识》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/audio1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android音频开发（一）——基础知识》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/audio1/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/audio1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018/04/15/audio2/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Android音频开发（二）——音频采集与播放</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/15/listview2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">listview相关问题——只更新某一个item</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2018/04/15/audio1/&title=《Android音频开发（一）——基础知识》 — 又尔enter的blog&pic=http://yoursite.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2018/04/15/audio1/&title=《Android音频开发（一）——基础知识》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2018/04/15/audio1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android音频开发（一）——基础知识》 — 又尔enter的blog&url=http://yoursite.com/2018/04/15/audio1/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2018/04/15/audio1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByElEQVR42u3a24rCMAAEUP//p13YpwWxO5ObFU6eREt77ENIZvJ4xOP5O14///3m9ZrX8e76xQMXF3ea+7wc74gJN78mMeDi4p7nJpNXOxm9uyZ/Hbi4uPfnXk9/199f3xMXF/d7ucVCZPp14OLi3oE7H2TMxCJb9mq4uLgT3JnAdNXnQ/kuLi7udCvRTmpt5Fo/HRcX9wj3+kbLtivBU4ryBhcXdzM3WWQkk1FSn+TPLaYwXFzcDdx8WmmXMm3R0r4UXFzcfdx8YsoL1LEDXtEWCxcX9wi3WFKURytyXB6d4OLinuGuPWAx0+QUbTAuLu4R7li0Mfa3x4ISXFzck9w2+ky2RmOR64JaBRcXdxF37GhFW7rk8SsuLu59uG3JMRahtnf7p0rBxcXdxs0D08EzX8GLqAMXXFzczdy8Ll21cMljFFxc3M9y2xq1jUtm6hZcXNxPcfORg9qlUt384OLibuOu6jTzBU1bsWypYHFxcYNfk8lrLBbJ75Nvh3BxcU9y50PSsYVRfXQMFxf3Ztz8sEU+wbXFLS4u7p25Y4HL1OIGFxf3OLcoO4eWNW0BsyAWwcXFneC2gWlbvSQbobHYBRcXdwP3BzAvJQtoG4kCAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
