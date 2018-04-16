@@ -29,13 +29,15 @@
 <meta property="og:site_name" content="又尔enter的blog">
 <meta property="og:description" content="Android单线程模型&amp;emsp;&amp;emsp;我们知道进程是cpu资源分配的最小单位，线程是cpu调度的最小单位。早期的操作系统里进程既是资源分配也是调度的最小单位，后来随着cpu速度越来越快，为了更合理的使用cpu，减少进程切换的开销，才将资源分配和调度分开，就有了线程。线程是建立在进程的基础上的一次程序运行单位。&amp;emsp;&amp;emsp;当我们第一次打开一个App时，系统就会给这个App分配一">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-e0bba3dad40a7508.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-f58dac345c81044e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-04-15T12:28:50.173Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-49da756e0ea45d4b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-1578bcc4d14af428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-c0cbf4c97128315e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-1231c34c5275fdf3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-16T07:21:23.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android线程间通信基础——Handler,Looper,MessageQueue">
 <meta name="twitter:description" content="Android单线程模型&amp;emsp;&amp;emsp;我们知道进程是cpu资源分配的最小单位，线程是cpu调度的最小单位。早期的操作系统里进程既是资源分配也是调度的最小单位，后来随着cpu速度越来越快，为了更合理的使用cpu，减少进程切换的开销，才将资源分配和调度分开，就有了线程。线程是建立在进程的基础上的一次程序运行单位。&amp;emsp;&amp;emsp;当我们第一次打开一个App时，系统就会给这个App分配一">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3287039-e0bba3dad40a7508.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3287039-49da756e0ea45d4b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
     
         <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
     
@@ -177,7 +179,7 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>目录</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android单线程模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">Android单线程模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#疑问"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">疑问</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#大致流程图如下："><span class="post-toc-number">1.2.</span> <span class="post-toc-text">大致流程图如下：</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#流程讲解"><span class="post-toc-number">2.</span> <span class="post-toc-text">流程讲解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#hander创建（UI线程中）"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">hander创建（UI线程中）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#发送消息"><span class="post-toc-number">3.</span> <span class="post-toc-text">发送消息</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Looper消息循环"><span class="post-toc-number">4.</span> <span class="post-toc-text">Looper消息循环</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Message走了一圈又回到了Handler"><span class="post-toc-number">5.</span> <span class="post-toc-text">Message走了一圈又回到了Handler</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">6.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Message流向图"><span class="post-toc-number">7.</span> <span class="post-toc-text">Message流向图</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android单线程模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">Android单线程模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#疑问"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">疑问</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#大致流程图如下"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">大致流程图如下</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#UML类图"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">UML类图</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#流程讲解"><span class="post-toc-number">2.</span> <span class="post-toc-text">流程讲解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#hander创建（UI线程中）"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">hander创建（UI线程中）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#发送消息"><span class="post-toc-number">3.</span> <span class="post-toc-text">发送消息</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Looper消息循环"><span class="post-toc-number">4.</span> <span class="post-toc-text">Looper消息循环</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Message走了一圈又回到了Handler"><span class="post-toc-number">5.</span> <span class="post-toc-text">Message走了一圈又回到了Handler</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">6.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Message流向图"><span class="post-toc-number">7.</span> <span class="post-toc-text">Message流向图</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#时序图"><span class="post-toc-number">8.</span> <span class="post-toc-text">时序图</span></a></li></ol>
         </nav>
     </aside>
 
@@ -205,12 +207,19 @@
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="Android单线程模型"><a href="#Android单线程模型" class="headerlink" title="Android单线程模型"></a>Android单线程模型</h2><p>&emsp;&emsp;我们知道进程是cpu<strong>资源分配的最小单位</strong>，线程是cpu<strong>调度的最小单位</strong>。早期的操作系统里进程既是资源分配也是调度的最小单位，后来随着cpu速度越来越快，为了更合理的使用cpu，减少进程切换的开销，才将资源分配和调度分开，就有了线程。线程是建立在进程的基础上的一次程序运行单位。<br>&emsp;&emsp;当我们第一次打开一个App时，系统就会给这个App分配一个进程，并且启动一个main thread线程，主线程主要负责处理与UI相关的事件，如：用户的按键事件，用户接触屏幕的事件以及屏幕绘图事件，并把相关的事件分发到对应的组件进行处理。所以主线程通常又被叫做UI线程。<br>&emsp;&emsp;在开发Android 应用时必须遵守单线程模型的原则： Android UI操作并不是线程安全的并且这些操作必须在UI线程中执行。</p>
 <h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><p>&emsp;&emsp;既然UI操作只能在UI线程里更新，那么可不可以把所有操作都放在UI线程里面呢？答案是不可能的，可能会导致ANR。所以一些常用的耗时操作只能在非UI线程里执行，比如网络，数据库，IO操作等。那在非UI线程执行完后我们想把处理结果通知给UI线程怎么办，这就涉及到线程间通信的问题。<br>&emsp;&emsp;传统的Java线程间通信包括volatile，synchronized，CountDownLatch等不适合于Android，因为AndroidUI线程是消息驱动模式，主线程在启动时会初始化一个Looper，并调用loop()方法开启死循环，在循环里执行处理消息的操作。</p>
-<h3 id="大致流程图如下："><a href="#大致流程图如下：" class="headerlink" title="大致流程图如下："></a>大致流程图如下：</h3><figure class="image-bubble">
+<h3 id="大致流程图如下"><a href="#大致流程图如下" class="headerlink" title="大致流程图如下"></a>大致流程图如下</h3><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://upload-images.jianshu.io/upload_images/3287039-e0bba3dad40a7508.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="handler.png" title="">
+                    <img src="https://upload-images.jianshu.io/upload_images/3287039-49da756e0ea45d4b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="handler_watermark.png" title="">
                 </div>
-                <div class="image-caption">handler.png</div>
+                <div class="image-caption">handler_watermark.png</div>
+            </figure>
+<h3 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/3287039-1578bcc4d14af428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="uml_watermark.png" title="">
+                </div>
+                <div class="image-caption">uml_watermark.png</div>
             </figure>
 <h2 id="流程讲解"><a href="#流程讲解" class="headerlink" title="流程讲解"></a>流程讲解</h2><p>&emsp;&emsp;接下来我们以handler的创建为起始点，结合源码开始讲解。</p>
 <h3 id="hander创建（UI线程中）"><a href="#hander创建（UI线程中）" class="headerlink" title="hander创建（UI线程中）"></a>hander创建（UI线程中）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handler = new Handler();</span><br></pre></td></tr></table></figure>
@@ -242,11 +251,17 @@
 <h2 id="Message流向图"><a href="#Message流向图" class="headerlink" title="Message流向图"></a>Message流向图</h2><figure class="image-bubble">
                 <div class="img-lightbox">
                     <div class="overlay"></div>
-                    <img src="https://upload-images.jianshu.io/upload_images/3287039-f58dac345c81044e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="message.png" title="">
+                    <img src="https://upload-images.jianshu.io/upload_images/3287039-c0cbf4c97128315e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="message_watermark.png" title="">
                 </div>
-                <div class="image-caption">message.png</div>
+                <div class="image-caption">message_watermark.png</div>
             </figure>
-
+<h2 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/3287039-1231c34c5275fdf3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="time_watermark.png" title="">
+                </div>
+                <div class="image-caption">time_watermark.png</div>
+            </figure>
         </div>
 
         <blockquote class="post-copyright">
@@ -254,7 +269,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-04-15T12:28:50.173Z" itemprop="dateUpdated">2018-04-15 20:28:50</time>
+    最后更新时间：<time datetime="2018-04-16T07:21:23.681Z" itemprop="dateUpdated">2018-04-16 15:21:23</time>
 </span><br>
 
 
