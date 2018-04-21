@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android探索更新UI的方法（二）-更新UI的方式 | 又尔enter的blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,Handler,UI,View">
+    <meta name="description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
+<meta name="keywords" content="Android,Handler,UI,View">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android探索更新UI的方法（二）-更新UI的方式">
+<meta property="og:url" content="https://www.dyenter.top/2018/04/21/freshui2/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-2c3d90d4032190b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-21T07:15:28.121Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android探索更新UI的方法（二）-更新UI的方式">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3287039-2c3d90d4032190b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/22b6ec1adf98"  >
+                <i class="icon icon-lg icon-link"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android探索更新UI的方法（二）-更新UI的方式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android探索更新UI的方法（二）-更新UI的方式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-21T07:14:40.000Z" itemprop="datePublished" class="page-time">
+  2018-04-21
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/View/">View</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android更新UI的几种方式"><span class="post-toc-number">2.</span> <span class="post-toc-text">Android更新UI的几种方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Handler"><span class="post-toc-number">3.</span> <span class="post-toc-text">Handler</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#runOnUiThread"><span class="post-toc-number">4.</span> <span class="post-toc-text">runOnUiThread()</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#View-post"><span class="post-toc-number">5.</span> <span class="post-toc-text">View post()</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#view-post-时序图"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">view post 时序图</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#AsyncTask"><span class="post-toc-number">6.</span> <span class="post-toc-text">AsyncTask</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#View其他相关用法"><span class="post-toc-number">7.</span> <span class="post-toc-text">View其他相关用法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ViewTreeObserver"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">ViewTreeObserver</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MessageQueue-IdleHandler"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">MessageQueue.IdleHandler</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-freshui2"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android探索更新UI的方法（二）-更新UI的方式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-21 15:14:40" datetime="2018-04-21T07:14:40.000Z"  itemprop="datePublished">2018-04-21</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/View/">View</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;<a href="https://www.dyenter.top/2018/04/19/freshui1/">前一章</a>我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，让它去显示，中间通过Binder线程实现进程间交互。</p>
+<h2 id="Android更新UI的几种方式"><a href="#Android更新UI的几种方式" class="headerlink" title="Android更新UI的几种方式"></a>Android更新UI的几种方式</h2><p>&emsp;&emsp;我们知道Android中有以下几种更新UI的方式，我们探讨的都是在非UI线程更新，下同。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、Handler sendMessage() or post();</span><br><span class="line">2、Activity runOnUiThread();</span><br><span class="line">3、View post()</span><br><span class="line">4、AsyncTask</span><br><span class="line">5、View其他相关用法</span><br></pre></td></tr></table></figure></p>
+<h2 id="Handler"><a href="#Handler" class="headerlink" title="Handler"></a>Handler</h2><p>&emsp;&emsp;handler是最常用的，也是Android中最基本的方法，Android中所有的异步更新UI的本质都是用Handler。那么我们看一下sendMessage和post有什么区别<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public final boolean sendMessage(Message msg)</span><br><span class="line">&#123;</span><br><span class="line">        return sendMessageDelayed(msg, 0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public final boolean sendMessageDelayed(Message msg, long delayMillis)</span><br><span class="line">&#123;</span><br><span class="line">        if (delayMillis &lt; 0) &#123;</span><br><span class="line">            delayMillis = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public boolean sendMessageAtTime(Message msg, long uptimeMillis) &#123;</span><br><span class="line">        MessageQueue queue = mQueue;</span><br><span class="line">        if (queue == null) &#123;</span><br><span class="line">            RuntimeException e = new RuntimeException(</span><br><span class="line">                    this + &quot; sendMessageAtTime() called with no mQueue&quot;);</span><br><span class="line">            Log.w(&quot;Looper&quot;, e.getMessage(), e);</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return enqueueMessage(queue, msg, uptimeMillis);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现最后调用的是sendMessageAtTime，这个方法里面吧Message加入到MessageQueue里面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public final boolean post(Runnable r)</span><br><span class="line">&#123;</span><br><span class="line">       return  sendMessageDelayed(getPostMessage(r), 0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static Message getPostMessage(Runnable r) &#123;</span><br><span class="line">        Message m = Message.obtain();</span><br><span class="line">        m.callback = r;</span><br><span class="line">        return m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实就是把Runnable包装成一个Message，即把Message的callback设置成Runnable，之后就会在主线程回调Runnable的run方法。就这么简单实现了UI的更新。</p>
+<h2 id="runOnUiThread"><a href="#runOnUiThread" class="headerlink" title="runOnUiThread()"></a>runOnUiThread()</h2><p>&emsp;&emsp;runOnUiThread()是Activity的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// we must have a handler before the FragmentController is constructed</span><br><span class="line">final Handler mHandler = new Handler();</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">     * Runs the specified action on the UI thread. If the current thread is the UI</span><br><span class="line">     * thread, then the action is executed immediately. If the current thread is</span><br><span class="line">     * not the UI thread, the action is posted to the event queue of the UI thread.</span><br><span class="line">     *</span><br><span class="line">     * @param action the action to run on the UI thread</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public final void runOnUiThread(Runnable action) &#123;</span><br><span class="line">        if (Thread.currentThread() != mUiThread) &#123;</span><br><span class="line">            mHandler.post(action);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            action.run();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;如果是在主线程调用该方法，则跟没调用一样的，都是立即更新UI，调用Runnable的run方法；<br>&emsp;&emsp;如果实在子线程调用该方法，则通过handler.post()把它放进消息队列。<strong>所以这个方法的本质很简单，主线程立即更新，子线程通过handler放进MessageQueue</strong><br>&emsp;&emsp;注意mHandler是Activity里面的handler,mUiThread实在Activity的attach方法中赋值的，这个方法是由ActivityThread经过一系列方法调用的，所以这个是主线程。</p>
+<h2 id="View-post"><a href="#View-post" class="headerlink" title="View post()"></a>View post()</h2><p>Android还提供这个View.post()方法来供我们更新UI，这个方法在View.java里面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * &lt;p&gt;Causes the Runnable to be added to the message queue.</span><br><span class="line">     * The runnable will be run on the user interface thread.&lt;/p&gt;</span><br><span class="line">     *</span><br><span class="line">     * @param action The Runnable that will be executed.</span><br><span class="line">     *</span><br><span class="line">     * @return Returns true if the Runnable was successfully placed in to the</span><br><span class="line">     *         message queue.  Returns false on failure, usually because the</span><br><span class="line">     *         looper processing the message queue is exiting.</span><br><span class="line">     *</span><br><span class="line">     * @see #postDelayed</span><br><span class="line">     * @see #removeCallbacks</span><br><span class="line">     */</span><br><span class="line">    public boolean post(Runnable action) &#123;</span><br><span class="line">        final AttachInfo attachInfo = mAttachInfo;</span><br><span class="line">        if (attachInfo != null) &#123;</span><br><span class="line">            return attachInfo.mHandler.post(action);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Postpone the runnable until we know on which thread it needs to run.</span><br><span class="line">        // Assume that the runnable will be successfully placed after attach.</span><br><span class="line">        getRunQueue().post(action);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;从注释可以知道，当attachInfo为空时，即这时候UI还没创建好，是吧Runnable添加到队列中；当attachInfo不为空时，它是把Runnable投递到主线程的消息队列，这里用的handler是mAttachInfo的handler，我们看一下它是在哪，什么时候创建的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">    AttachInfo mAttachInfo;</span><br><span class="line">/**</span><br><span class="line">     * Queue of pending runnables. Used to postpone calls to post() until this</span><br><span class="line">     * view is attached and has a handler.</span><br><span class="line">     */</span><br><span class="line">    private HandlerActionQueue mRunQueue;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">     * @param info the &#123;@link android.view.View.AttachInfo&#125; to associated with</span><br><span class="line">     *        this view</span><br><span class="line">     */</span><br><span class="line">    void dispatchAttachedToWindow(AttachInfo info, int visibility) &#123;</span><br><span class="line">        mAttachInfo = info;</span><br><span class="line">        .....</span><br><span class="line">        // Transfer all pending runnables.</span><br><span class="line">        if (mRunQueue != null) &#123;</span><br><span class="line">            mRunQueue.executeActions(info.mHandler);</span><br><span class="line">            mRunQueue = null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>dispatchAttachedToWindow()是在ViewRootImpl中调用的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ViewRootImpl.java</span><br><span class="line"></span><br><span class="line">private void performTraversals() &#123;</span><br><span class="line">        // cache mView since it is used so much below...</span><br><span class="line">        final View host = mView;</span><br><span class="line">        .....</span><br><span class="line">        if (mFirst) &#123;</span><br><span class="line">                host.dispatchAttachedToWindow(mAttachInfo, 0);</span><br><span class="line">        &#125;</span><br><span class="line">        // Execute enqueued actions on every traversal in case a detached view enqueued an action</span><br><span class="line">        getRunQueue().executeActions(mAttachInfo.mHandler);</span><br><span class="line">        .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>mView是在setView()中赋值的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void setView(View view, WindowManager.LayoutParams attrs, View panelParentView) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            if (mView == null) &#123;</span><br><span class="line">                mView = view;</span><br><span class="line">            &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而setView是WindowManagerGlobal中调用的，关于WMS等的源码分析我们之后再讲，这里只需要重点关注View的mRunQueue，也就是在Activity启动的流程中，会把post的Runnable放到mRunQueue这个队列里，当view显示到屏幕上，会调用ViewRootImpl的performTraversals()，然后调用View的dispatchAttachedToWindow，然后执行mRunQueue里面的任务。<br>&emsp;&emsp;<strong>总结：当view没创建好时，先把任务添加到队列中，不会执行；只有当view创建完毕，显示到屏幕上时，才回去调用任务队列里面的任务</strong>，所以我们在onCreate(),onStart()等生命周期里面post的任务不会立即执行，有兴趣的童鞋可以去试一下。<br>&emsp;&emsp;接下来我们重点关注mRunQueue这个HandlerActionQueue<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Class used to enqueue pending work from Views when no Handler is attached.</span><br><span class="line"> *</span><br><span class="line"> * @hide Exposed for test framework only.</span><br><span class="line"> */</span><br><span class="line">public class HandlerActionQueue &#123;</span><br><span class="line">    private HandlerAction[] mActions;</span><br><span class="line">    private int mCount;</span><br><span class="line"></span><br><span class="line">    public void post(Runnable action) &#123;</span><br><span class="line">        postDelayed(action, 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void postDelayed(Runnable action, long delayMillis) &#123;</span><br><span class="line">        final HandlerAction handlerAction = new HandlerAction(action, delayMillis);</span><br><span class="line"></span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            if (mActions == null) &#123;</span><br><span class="line">                mActions = new HandlerAction[4];</span><br><span class="line">            &#125;</span><br><span class="line">            mActions = GrowingArrayUtils.append(mActions, mCount, handlerAction);</span><br><span class="line">            mCount++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void removeCallbacks(Runnable action) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            final int count = mCount;</span><br><span class="line">            int j = 0;</span><br><span class="line"></span><br><span class="line">            final HandlerAction[] actions = mActions;</span><br><span class="line">            for (int i = 0; i &lt; count; i++) &#123;</span><br><span class="line">                if (actions[i].matches(action)) &#123;</span><br><span class="line">                    // Remove this action by overwriting it within</span><br><span class="line">                    // this loop or nulling it out later.</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (j != i) &#123;</span><br><span class="line">                    // At least one previous entry was removed, so</span><br><span class="line">                    // this one needs to move to the &quot;new&quot; list.</span><br><span class="line">                    actions[j] = actions[i];</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // The &quot;new&quot; list only has j entries.</span><br><span class="line">            mCount = j;</span><br><span class="line"></span><br><span class="line">            // Null out any remaining entries.</span><br><span class="line">            for (; j &lt; count; j++) &#123;</span><br><span class="line">                actions[j] = null;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void executeActions(Handler handler) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            final HandlerAction[] actions = mActions;</span><br><span class="line">            for (int i = 0, count = mCount; i &lt; count; i++) &#123;</span><br><span class="line">                final HandlerAction handlerAction = actions[i];</span><br><span class="line">                handler.postDelayed(handlerAction.action, handlerAction.delay);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mActions = null;</span><br><span class="line">            mCount = 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return mCount;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Runnable getRunnable(int index) &#123;</span><br><span class="line">        if (index &gt;= mCount) &#123;</span><br><span class="line">            throw new IndexOutOfBoundsException();</span><br><span class="line">        &#125;</span><br><span class="line">        return mActions[index].action;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public long getDelay(int index) &#123;</span><br><span class="line">        if (index &gt;= mCount) &#123;</span><br><span class="line">            throw new IndexOutOfBoundsException();</span><br><span class="line">        &#125;</span><br><span class="line">        return mActions[index].delay;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static class HandlerAction &#123;</span><br><span class="line">        final Runnable action;</span><br><span class="line">        final long delay;</span><br><span class="line"></span><br><span class="line">        public HandlerAction(Runnable action, long delay) &#123;</span><br><span class="line">            this.action = action;</span><br><span class="line">            this.delay = delay;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        public boolean matches(Runnable otherAction) &#123;</span><br><span class="line">            return otherAction == null &amp;&amp; action == null</span><br><span class="line">                    || action != null &amp;&amp; action.equals(otherAction);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它里面有个内部类HandlerAction，封装了Runnable，HandlerAction[]保存了任务，初始容量大小为4。可以看到post()方法就是把Runnable放进handlerAction数组里面，并没有执行，真正的执行在dispatchAttachedToWindow方法中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">if (mRunQueue != null) &#123;</span><br><span class="line">            mRunQueue.executeActions(info.mHandler);</span><br><span class="line">            mRunQueue = null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void executeActions(Handler handler) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            final HandlerAction[] actions = mActions;</span><br><span class="line">            for (int i = 0, count = mCount; i &lt; count; i++) &#123;</span><br><span class="line">                final HandlerAction handlerAction = actions[i];</span><br><span class="line">                handler.postDelayed(handlerAction.action, handlerAction.delay);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            mActions = null;</span><br><span class="line">            mCount = 0;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>执行就是遍历HandlerAction数组，依次执行，这里的handler是AttachInfo的handler，它是ViewRootImpl中的ViewRootHandler，它也是继承Handler的。执行完毕后清空HandlerAction数组。</p>
+<h3 id="view-post-时序图"><a href="#view-post-时序图" class="headerlink" title="view post 时序图"></a>view post 时序图</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://upload-images.jianshu.io/upload_images/3287039-2c3d90d4032190b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="UML时序图.png" title="">
+                </div>
+                <div class="image-caption">UML时序图.png</div>
+            </figure>
+<h2 id="AsyncTask"><a href="#AsyncTask" class="headerlink" title="AsyncTask"></a>AsyncTask</h2><p>AsyncTask的原理其实也是用Handler更新UI的，它内部有一个InternalHandler sHandler；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private static class InternalHandler extends Handler &#123;</span><br><span class="line">        public InternalHandler(Looper looper) &#123;</span><br><span class="line">            super(looper);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;RawUseOfParameterizedType&quot;&#125;)</span><br><span class="line">        @Override</span><br><span class="line">        public void handleMessage(Message msg) &#123;</span><br><span class="line">            AsyncTaskResult&lt;?&gt; result = (AsyncTaskResult&lt;?&gt;) msg.obj;</span><br><span class="line">            switch (msg.what) &#123;</span><br><span class="line">                case MESSAGE_POST_RESULT:</span><br><span class="line">                    // There is only one result</span><br><span class="line">                    result.mTask.finish(result.mData[0]);</span><br><span class="line">                    break;</span><br><span class="line">                case MESSAGE_POST_PROGRESS:</span><br><span class="line">                    result.mTask.onProgressUpdate(result.mData);</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意它初始化Handler用的是主线程的Looper，sHandler = new InternalHandler(Looper.getMainLooper());关于AsyncTask的工作原理之后会讲到。</p>
+<h2 id="View其他相关用法"><a href="#View其他相关用法" class="headerlink" title="View其他相关用法"></a>View其他相关用法</h2><h3 id="ViewTreeObserver"><a href="#ViewTreeObserver" class="headerlink" title="ViewTreeObserver"></a>ViewTreeObserver</h3><p>&emsp;&emsp;在开发中，通常有这样一种需求，我们需要获取View的宽高等信息，要获取这些信息必须等View完成measure后才能获取，可以用上面我们将的View的post获取，也可以用ViewTreeObserver设置监听来获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">final ViewTreeObserver observer = surfaceView.getViewTreeObserver();</span><br><span class="line">ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onGlobalLayout() &#123;</span><br><span class="line">        if (observer.isAlive()) &#123;</span><br><span class="line">            observer.removeGlobalOnLayoutListener(this);</span><br><span class="line">            //获取宽高 </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">observer.addOnGlobalLayoutListener(layoutListener);</span><br></pre></td></tr></table></figure></p>
+<p>它会在View的layout发生变化时调用，注意可能会多次调用，用过一次后最好移除监听，否则回调会多次执行，拿它是什么时候回调的呢，我们要再一次进入ViewRootImpl的performTravels()方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">ViewTreeObserver.java</span><br><span class="line"></span><br><span class="line">public final void dispatchOnGlobalLayout() &#123;</span><br><span class="line">        final CopyOnWriteArray&lt;OnGlobalLayoutListener&gt; listeners = mOnGlobalLayoutListeners;</span><br><span class="line">        if (listeners != null &amp;&amp; listeners.size() &gt; 0) &#123;</span><br><span class="line">            CopyOnWriteArray.Access&lt;OnGlobalLayoutListener&gt; access = listeners.start();</span><br><span class="line">            try &#123;</span><br><span class="line">                int count = access.size();</span><br><span class="line">                for (int i = 0; i &lt; count; i++) &#123;</span><br><span class="line">                    access.get(i).onGlobalLayout();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; finally &#123;</span><br><span class="line">                listeners.end();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ViewRootImpl.java</span><br><span class="line"></span><br><span class="line">private void performTraversals() &#123;</span><br><span class="line">        .....</span><br><span class="line">        performMeasure();</span><br><span class="line">        .....</span><br><span class="line">        performLayout();</span><br><span class="line"></span><br><span class="line">        if (triggerGlobalLayoutListener) &#123;</span><br><span class="line">            mAttachInfo.mRecomputeGlobalAttributes = false;</span><br><span class="line">            mAttachInfo.mTreeObserver.dispatchOnGlobalLayout();</span><br><span class="line">        &#125;</span><br><span class="line">        .....</span><br><span class="line">        performDraw();</span><br><span class="line">        .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当View完成测量，布局后，如果设置了监听，则回调。所以这也能正确的获取宽高。</p>
+<h3 id="MessageQueue-IdleHandler"><a href="#MessageQueue-IdleHandler" class="headerlink" title="MessageQueue.IdleHandler"></a>MessageQueue.IdleHandler</h3><p>在上一节中，我们提到过MessageQueue中有个有趣的接口叫IdleHandler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">private final ArrayList&lt;IdleHandler&gt; mIdleHandlers = new ArrayList&lt;IdleHandler&gt;();</span><br><span class="line">private IdleHandler[] mPendingIdleHandlers;</span><br><span class="line">/**</span><br><span class="line">     * Callback interface for discovering when a thread is going to block</span><br><span class="line">     * waiting for more messages.</span><br><span class="line">     */</span><br><span class="line">    public static interface IdleHandler &#123;</span><br><span class="line">        /**</span><br><span class="line">         * Called when the message queue has run out of messages and will now</span><br><span class="line">         * wait for more.  Return true to keep your idle handler active, false</span><br><span class="line">         * to have it removed.  This may be called if there are still messages</span><br><span class="line">         * pending in the queue, but they are all scheduled to be dispatched</span><br><span class="line">         * after the current time.</span><br><span class="line">         */</span><br><span class="line">        boolean queueIdle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">public void addIdleHandler(@NonNull IdleHandler handler) &#123;</span><br><span class="line">        if (handler == null) &#123;</span><br><span class="line">            throw new NullPointerException(&quot;Can&apos;t add a null IdleHandler&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            mIdleHandlers.add(handler);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void removeIdleHandler(@NonNull IdleHandler handler) &#123;</span><br><span class="line">        synchronized (this) &#123;</span><br><span class="line">            mIdleHandlers.remove(handler);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Message next() &#123;</span><br><span class="line">        .....</span><br><span class="line">        int pendingIdleHandlerCount = -1; // -1 only during first iteration</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">                if (pendingIdleHandlerCount &lt; 0</span><br><span class="line">                        &amp;&amp; (mMessages == null || now &lt; mMessages.when)) &#123;</span><br><span class="line">                    pendingIdleHandlerCount = mIdleHandlers.size();</span><br><span class="line">                &#125;</span><br><span class="line">                if (pendingIdleHandlerCount &lt;= 0) &#123;</span><br><span class="line">                    // No idle handlers to run.  Loop and wait some more.</span><br><span class="line">                    mBlocked = true;</span><br><span class="line">                    continue;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (mPendingIdleHandlers == null) &#123;</span><br><span class="line">                    mPendingIdleHandlers = new IdleHandler[Math.max(pendingIdleHandlerCount, 4)];</span><br><span class="line">                &#125;</span><br><span class="line">                mPendingIdleHandlers = mIdleHandlers.toArray(mPendingIdleHandlers);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // Run the idle handlers.</span><br><span class="line">            // We only ever reach this code block during the first iteration.</span><br><span class="line">            for (int i = 0; i &lt; pendingIdleHandlerCount; i++) &#123;</span><br><span class="line">                final IdleHandler idler = mPendingIdleHandlers[i];</span><br><span class="line">                mPendingIdleHandlers[i] = null; // release the reference to the handler</span><br><span class="line"></span><br><span class="line">                boolean keep = false;</span><br><span class="line">                try &#123;</span><br><span class="line">                    keep = idler.queueIdle();</span><br><span class="line">                &#125; catch (Throwable t) &#123;</span><br><span class="line">                    Log.wtf(TAG, &quot;IdleHandler threw exception&quot;, t);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                if (!keep) &#123;</span><br><span class="line">                    synchronized (this) &#123;</span><br><span class="line">                        mIdleHandlers.remove(idler);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // Reset the idle handler count to 0 so we do not run them again.</span><br><span class="line">            pendingIdleHandlerCount = 0;</span><br><span class="line">        .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过官方解释我们可以了解这个接口的作用：当消息队列中没有消息时，会回调该接口，前提是你设置了监听。它的返回值：返回false，那么就会移除它，返回true就会在下次message处理完了的时候继续回调。</p>
+<p>那么这个接口到底有什么用呢，其实也可以用来获取View的宽高，在View初始化，Activity启动的时候，MessageQueue的有许多的消息，我们可以从ViewRootImpl的ViewRootHandler里面可以看出。当MessageQueue为空时，表示View真正的完成了measue，layout，draw等操作，这是我们就可以去执行一些获取view属性的操作或者做一些耗时操作，这时就不会影响UI的显示了，特别是进入App主页，经常需要向服务器请求大量的数据来更新UI，如果子线程过多，又设置了过高的优先级，就会抢占调度UI线程，导致卡顿，所以这个接口就很有用了。那么怎么具体使用呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> //MessageQueue queue = Looper.getMainLooper().getQueue();</span><br><span class="line">MessageQueue queue = Looper.myQueue();</span><br><span class="line">queue.addIdleHandler(new MessageQueue.IdleHandler() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public boolean queueIdle() &#123;</span><br><span class="line">        Log.d(&quot;Activity&quot;,&quot;idleHandler&quot;);</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-21T07:15:28.121Z" itemprop="dateUpdated">2018-04-21 15:15:28</time>
+</span><br>
+
+
+        
+	<br />
+	
+        又尔enter版权所有，转载请注明出处：<a href="/2018/04/21/freshui2/" target="_blank" rel="external">https://www.dyenter.top/2018/04/21/freshui2/index.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.dyenter.top">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Handler/">Handler</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UI/">UI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/21/freshui2/&title=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/21/freshui2/&title=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/21/freshui2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/21/freshui2/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/21/freshui2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/19/freshui1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android探索更新UI的方法（一）-更新UI的时机</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/21/freshui2/&title=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/21/freshui2/&title=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/21/freshui2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android探索更新UI的方法（二）-更新UI的方式》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/21/freshui2/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/21/freshui2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQY7jMAwEwPz/01lgr7NrdJPJAJbLp0HiUVg6ECKp1yt+3n+f629/Pj//9x0/r288GBgYt2Uky/1v6TyUZCNaNgYGxtMYs6XrH7tcv90+DAwMjCTQJIj2OIiBgYGxT7jXaTd/JzlEYmBgYLRF7CaZbtgfrsUxMDBuyGgHA7/59xfnGxgYGDdhbNLlbOXr490wHgwMjKMZ18Vke/3iep3Z+0UixsDAOJSRN7/ykWRbmrZp+h/xY2BgHM1IjnR50PnhL/+kGAxgYGAcymgTX/6Tm5K13jIMDIzHML7dSptd7BjOYDEwMI5jzNpws2sZeYOvWAEDA+Noxm8GvXm/2GIMDIzjGNfBzUrNdlTQrlYUsRgYGMcx9jk72ZRiRpGPLjAwMB7A2BexCa/9JN9WDAyMsxntGHIWRHtdrAZgYGAczZg135MSd5Z8ZxuEgYFxNmNzLGuHBHlSbkcLGBgYT2MkoSSB7lts9XETAwPjkYxZuMnAID845u0/DAyMJzBazKwllxwW81ZgdOUCAwPjCMbsukPe3P8UKS+MMTAwTmK8y6cNoh0bDI+hGBgYRzM+m2Rnpenm8gcGBsZzGO0QcXNAzJtuSVJezUIxMDBuyJi1utpm3CYdF/MNDAwMjEUJ2l7jKAYSGBgYGOVhri1E221aJVwMDIzbMmbDgGQA2a4znK9iYGAczdgPBvJmWdtu+/CdEQwMjPsx/gC982C+lzKDIQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
