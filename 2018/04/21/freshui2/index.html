@@ -20,9 +20,9 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Android,Handler,UI,View">
+    <meta name="keywords" content="Android,UI,Handler,View">
     <meta name="description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
-<meta name="keywords" content="Android,Handler,UI,View">
+<meta name="keywords" content="Android,UI,Handler,View">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android探索更新UI的方法（二）-更新UI的方式">
 <meta property="og:url" content="https://www.dyenter.top/2018/04/21/freshui2/index.html">
@@ -30,7 +30,7 @@
 <meta property="og:description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3287039-2c3d90d4032190b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-04-21T07:15:28.121Z">
+<meta property="og:updated_time" content="2018-04-21T07:20:37.161Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android探索更新UI的方法（二）-更新UI的方式">
 <meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;前一章我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，">
@@ -203,7 +203,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;<a href="https://www.dyenter.top/2018/04/19/freshui1/">前一章</a>我们讲了更新UI的时机，即Android是在哪一刻才更新UI的，了解Android更新UI的源码流程有助于我们了解其本质，在开发过程中出错也能更快的定位。当然看源码也要不求甚解，不要一头砸进去，毫无头绪，只需顺着一条主线，适可而止。像UI怎么显示到屏幕上的，实际App进程是把显示操作发给System_Server进程的WindowManagerService线程，让它去显示，中间通过Binder线程实现进程间交互。</p>
-<h2 id="Android更新UI的几种方式"><a href="#Android更新UI的几种方式" class="headerlink" title="Android更新UI的几种方式"></a>Android更新UI的几种方式</h2><p>&emsp;&emsp;我们知道Android中有以下几种更新UI的方式，我们探讨的都是在非UI线程更新，下同。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、Handler sendMessage() or post();</span><br><span class="line">2、Activity runOnUiThread();</span><br><span class="line">3、View post()</span><br><span class="line">4、AsyncTask</span><br><span class="line">5、View其他相关用法</span><br></pre></td></tr></table></figure></p>
+<h2 id="Android更新UI的几种方式"><a href="#Android更新UI的几种方式" class="headerlink" title="Android更新UI的几种方式"></a>Android更新UI的几种方式</h2><p>&emsp;&emsp;我们知道Android中有以下几种更新UI的方式，我们探讨的都是在非UI线程更新，下同。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Handler sendMessage() or post();</span><br><span class="line">Activity runOnUiThread();</span><br><span class="line">View post()</span><br><span class="line">AsyncTask</span><br><span class="line">View其他相关用法</span><br></pre></td></tr></table></figure></p>
 <h2 id="Handler"><a href="#Handler" class="headerlink" title="Handler"></a>Handler</h2><p>&emsp;&emsp;handler是最常用的，也是Android中最基本的方法，Android中所有的异步更新UI的本质都是用Handler。那么我们看一下sendMessage和post有什么区别<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public final boolean sendMessage(Message msg)</span><br><span class="line">&#123;</span><br><span class="line">        return sendMessageDelayed(msg, 0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public final boolean sendMessageDelayed(Message msg, long delayMillis)</span><br><span class="line">&#123;</span><br><span class="line">        if (delayMillis &lt; 0) &#123;</span><br><span class="line">            delayMillis = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        return sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public boolean sendMessageAtTime(Message msg, long uptimeMillis) &#123;</span><br><span class="line">        MessageQueue queue = mQueue;</span><br><span class="line">        if (queue == null) &#123;</span><br><span class="line">            RuntimeException e = new RuntimeException(</span><br><span class="line">                    this + &quot; sendMessageAtTime() called with no mQueue&quot;);</span><br><span class="line">            Log.w(&quot;Looper&quot;, e.getMessage(), e);</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return enqueueMessage(queue, msg, uptimeMillis);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>发现最后调用的是sendMessageAtTime，这个方法里面吧Message加入到MessageQueue里面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public final boolean post(Runnable r)</span><br><span class="line">&#123;</span><br><span class="line">       return  sendMessageDelayed(getPostMessage(r), 0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static Message getPostMessage(Runnable r) &#123;</span><br><span class="line">        Message m = Message.obtain();</span><br><span class="line">        m.callback = r;</span><br><span class="line">        return m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其实就是把Runnable包装成一个Message，即把Message的callback设置成Runnable，之后就会在主线程回调Runnable的run方法。就这么简单实现了UI的更新。</p>
@@ -239,7 +239,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2018-04-21T07:15:28.121Z" itemprop="dateUpdated">2018-04-21 15:15:28</time>
+    最后更新时间：<time datetime="2018-04-21T07:20:37.161Z" itemprop="dateUpdated">2018-04-21 15:20:37</time>
 </span><br>
 
 
