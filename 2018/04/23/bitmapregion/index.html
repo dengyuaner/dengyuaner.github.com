@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android加载大图——BitmapRegionDecoder | 又尔enter的blog | Android开发工程师（4年）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,Bitmap,大图">
+    <meta name="description" content="前言在Android开发中，加载图片是很常见的情况，我们一般选择传统的加载图片框架如universalimageloader，picasso，fresco等。最近群里有个朋友说，面试遇到一个面试官说加载巨图怎么解决，就是一个图片很大，比如清明上河图，世界地图等，一个屏幕显示不完，又不能缩小，压缩，该怎么解决。 像这种情况当然是查官方文档了，其实android早就给我们解决方案——BitmapReg">
+<meta name="keywords" content="Android,Bitmap,大图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android加载大图——BitmapRegionDecoder">
+<meta property="og:url" content="https://www.dyenter.top/2018/04/23/bitmapregion/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="前言在Android开发中，加载图片是很常见的情况，我们一般选择传统的加载图片框架如universalimageloader，picasso，fresco等。最近群里有个朋友说，面试遇到一个面试官说加载巨图怎么解决，就是一个图片很大，比如清明上河图，世界地图等，一个屏幕显示不完，又不能缩小，压缩，该怎么解决。 像这种情况当然是查官方文档了，其实android早就给我们解决方案——BitmapReg">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-41ee176e3ad6ba0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3287039-92279a73b5060de9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-23T09:56:38.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android加载大图——BitmapRegionDecoder">
+<meta name="twitter:description" content="前言在Android开发中，加载图片是很常见的情况，我们一般选择传统的加载图片框架如universalimageloader，picasso，fresco等。最近群里有个朋友说，面试遇到一个面试官说加载巨图怎么解决，就是一个图片很大，比如清明上河图，世界地图等，一个屏幕显示不完，又不能缩小，压缩，该怎么解决。 像这种情况当然是查官方文档了，其实android早就给我们解决方案——BitmapReg">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3287039-41ee176e3ad6ba0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/22b6ec1adf98" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android加载大图——BitmapRegionDecoder</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android加载大图——BitmapRegionDecoder</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-23T09:55:28.000Z" itemprop="datePublished" class="page-time">
+  2018-04-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#说了这么多，我们来看看怎么使用它吧"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">说了这么多，我们来看看怎么使用它吧</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最主要的就是BitmapRegionDecode-newInstance-…-获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">最主要的就是BitmapRegionDecode.newInstance(…)获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#完整代码详见我的github"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">完整代码详见我的github</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-bitmapregion"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android加载大图——BitmapRegionDecoder</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-23 17:55:28" datetime="2018-04-23T09:55:28.000Z"  itemprop="datePublished">2018-04-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Android/">Android</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Android开发中，加载图片是很常见的情况，我们一般选择传统的加载图片框架如universalimageloader，picasso，fresco等。最近群里有个朋友说，面试遇到一个面试官说加载巨图怎么解决，就是一个图片很大，比如清明上河图，世界地图等，一个屏幕显示不完，又不能缩小，压缩，该怎么解决。</p>
+<p>像这种情况当然是查官方文档了，其实android早就给我们解决方案——BitmapRegionDecoder，从API10就引入了。如下图：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-41ee176e3ad6ba0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="NPONRY0T35GE$13{254X8Z1.png" title="">
+                </div>
+                <div class="image-caption">NPONRY0T35GE$13{254X8Z1.png</div>
+            </figure></p>
+<p>看官方文档的说明，这个类就是用来显示指定区域的图像，当原始图像大，你只需要部分图像时，BitmapRegionDecoder特别有用。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="说了这么多，我们来看看怎么使用它吧"><a href="#说了这么多，我们来看看怎么使用它吧" class="headerlink" title="说了这么多，我们来看看怎么使用它吧"></a>说了这么多，我们来看看怎么使用它吧</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://upload-images.jianshu.io/upload_images/3287039-92279a73b5060de9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="J1_7H5)MI{M2PV{){{3V97V.png" title="">
+                </div>
+                <div class="image-caption">J1_7H5)MI{M2PV{){{3V97V.png</div>
+            </figure>
+<h3 id="最主要的就是BitmapRegionDecode-newInstance-…-获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。"><a href="#最主要的就是BitmapRegionDecode-newInstance-…-获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。" class="headerlink" title="最主要的就是BitmapRegionDecode.newInstance(…)获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。"></a>最主要的就是BitmapRegionDecode.newInstance(…)获取一个对象，然后通过这个对象去调用decodeRegion（…）得到bitmap，最后就可以显示在屏幕上了。考虑到用户可以触摸移动图像，我们用手势控制器GestureDetector来控制图片显示的区域。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line">public class LargeImageView extends View implements GestureDetector.OnGestureListener &#123;</span><br><span class="line">    private static final String TAG = &quot;LargeImageView&quot;;</span><br><span class="line"></span><br><span class="line">    private BitmapRegionDecoder mDecoder;</span><br><span class="line"></span><br><span class="line">    //绘制的区域</span><br><span class="line">    private volatile Rect mRect = new Rect();</span><br><span class="line"></span><br><span class="line">    private int mScaledTouchSlop;</span><br><span class="line"></span><br><span class="line">    // 分别记录上次滑动的坐标</span><br><span class="line">    private int mLastX = 0;</span><br><span class="line">    private int mLastY = 0;</span><br><span class="line"></span><br><span class="line">    //图片的宽度和高度</span><br><span class="line">    private int mImageWidth, mImageHeight;</span><br><span class="line">   //手势控制器</span><br><span class="line">    private GestureDetector mGestureDetector;</span><br><span class="line">    private BitmapFactory.Options options;</span><br><span class="line"></span><br><span class="line">    public LargeImageView(Context context) &#123;</span><br><span class="line">        super(context);</span><br><span class="line">        init(context, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public LargeImageView(Context context, @Nullable AttributeSet attrs) &#123;</span><br><span class="line">        super(context, attrs);</span><br><span class="line">        init(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public LargeImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) &#123;</span><br><span class="line">        super(context, attrs, defStyleAttr);</span><br><span class="line">        init(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void init(Context context, AttributeSet attrs) &#123;</span><br><span class="line">        //设置显示图片的参数，如果对图片质量有要求，就选择ARGB_8888模式</span><br><span class="line">        options = new BitmapFactory.Options();</span><br><span class="line">        options.inPreferredConfig = Bitmap.Config.RGB_565;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        mScaledTouchSlop = ViewConfiguration.get(getContext())</span><br><span class="line">                .getScaledTouchSlop();</span><br><span class="line">        Log.d(TAG, &quot;sts:&quot; + mScaledTouchSlop);</span><br><span class="line">        //初始化手势控制器</span><br><span class="line">        mGestureDetector = new GestureDetector(context, this);</span><br><span class="line"></span><br><span class="line">        //获取图片的宽高</span><br><span class="line">        InputStream is = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            is = context.getResources().getAssets().open(&quot;timg.jpg&quot;);</span><br><span class="line">            //初始化BitmapRegionDecode，并用它来显示图片</span><br><span class="line">            mDecoder = BitmapRegionDecoder</span><br><span class="line">                    .newInstance(is, false);</span><br><span class="line">            BitmapFactory.Options tmpOptions = new BitmapFactory.Options();</span><br><span class="line">            // 设置为true则只获取图片的宽高等信息，不加载进内存</span><br><span class="line">            tmpOptions.inJustDecodeBounds = true;</span><br><span class="line">            BitmapFactory.decodeStream(is, null, tmpOptions);</span><br><span class="line">            mImageWidth = tmpOptions.outWidth;</span><br><span class="line">            mImageHeight = tmpOptions.outHeight;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                if (is != null) &#123;</span><br><span class="line">                    is.close();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onTouchEvent(MotionEvent event) &#123;</span><br><span class="line">        //把触摸事件交给手势控制器处理</span><br><span class="line">        return mGestureDetector.onTouchEvent(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onDown(MotionEvent e) &#123;</span><br><span class="line">        mLastX = (int) e.getRawX();</span><br><span class="line">        mLastY = (int) e.getRawY();</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onShowPress(MotionEvent e) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onSingleTapUp(MotionEvent e) &#123;</span><br><span class="line"></span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) &#123;</span><br><span class="line">        int x = (int) e2.getRawX();</span><br><span class="line">        int y = (int) e2.getRawY();</span><br><span class="line">        move(x, y);</span><br><span class="line"></span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 移动的时候更新图片显示的区域</span><br><span class="line">     *</span><br><span class="line">     * @param x</span><br><span class="line">     * @param y</span><br><span class="line">     */</span><br><span class="line">    private void move(int x, int y) &#123;</span><br><span class="line">        int deltaX = x - mLastX;</span><br><span class="line">        int deltaY = y - mLastY;</span><br><span class="line">        Log.d(TAG, &quot;move, deltaX:&quot; + deltaX + &quot; deltaY:&quot; + deltaY);</span><br><span class="line">        //如果图片宽度大于屏幕宽度</span><br><span class="line">        if (mImageWidth &gt; getWidth()) &#123;</span><br><span class="line">            //移动rect区域</span><br><span class="line">            mRect.offset(-deltaX, 0);</span><br><span class="line">            //检查是否到达图片最右端</span><br><span class="line">            if (mRect.right &gt; mImageWidth) &#123;</span><br><span class="line">                mRect.right = mImageWidth;</span><br><span class="line">                mRect.left = mImageWidth - getWidth();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //检查左端</span><br><span class="line">            if (mRect.left &lt; 0) &#123;</span><br><span class="line">                mRect.left = 0;</span><br><span class="line">                mRect.right = getWidth();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            invalidate();</span><br><span class="line">        &#125;</span><br><span class="line">        //如果图片高度大于屏幕高度</span><br><span class="line">        if (mImageHeight &gt; getHeight()) &#123;</span><br><span class="line">            mRect.offset(0, -deltaY);</span><br><span class="line"></span><br><span class="line">            //是否到达最底部</span><br><span class="line">            if (mRect.bottom &gt; mImageHeight) &#123;</span><br><span class="line">                mRect.bottom = mImageHeight;</span><br><span class="line">                mRect.top = mImageHeight - getHeight();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (mRect.top &lt; 0) &#123;</span><br><span class="line">                mRect.top = 0;</span><br><span class="line">                mRect.bottom = getHeight();</span><br><span class="line">            &#125;</span><br><span class="line">            //重绘</span><br><span class="line">            invalidate();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        mLastX = x;</span><br><span class="line">        mLastY = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onLongPress(MotionEvent e) &#123;</span><br><span class="line">        mLastX = (int) e.getRawX();</span><br><span class="line">        mLastY = (int) e.getRawY();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) &#123;</span><br><span class="line">        int x = (int) e2.getRawX();</span><br><span class="line">        int y = (int) e2.getRawY();</span><br><span class="line">        move(x, y);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onDraw(Canvas canvas) &#123;</span><br><span class="line">        //显示图片</span><br><span class="line">        Bitmap bm = mDecoder.decodeRegion(mRect, options);</span><br><span class="line">        canvas.drawBitmap(bm, 0, 0, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</span><br><span class="line">        super.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line"></span><br><span class="line">        int width = getMeasuredWidth();</span><br><span class="line">        int height = getMeasuredHeight();</span><br><span class="line"></span><br><span class="line">        int imageWidth = mImageWidth;</span><br><span class="line">        int imageHeight = mImageHeight;</span><br><span class="line"></span><br><span class="line">        //默认显示图片的中心区域，开发者可自行选择</span><br><span class="line">        mRect.left = imageWidth / 2 - width / 2;</span><br><span class="line">        mRect.top = imageHeight / 2 - height / 2;</span><br><span class="line">        mRect.right = mRect.left + width;</span><br><span class="line">        mRect.bottom = mRect.top + height;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="完整代码详见我的github"><a href="#完整代码详见我的github" class="headerlink" title="完整代码详见我的github"></a>完整代码详见我的<a href="https://github.com/dengyuaner/LargeImageDemo" target="_blank" rel="noopener">github</a></h3>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-23T09:56:38.175Z" itemprop="dateUpdated">2018-04-23 17:56:38</time>
+</span><br>
+
+
+        
+	<br />
+	
+        又尔enter版权所有，转载请注明出处：<a href="/2018/04/23/bitmapregion/" target="_blank" rel="external">https://www.dyenter.top/2018/04/23/bitmapregion/index.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.dyenter.top">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bitmap/">Bitmap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/大图/">大图</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/23/bitmapregion/&title=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/23/bitmapregion/&title=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/23/bitmapregion/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/23/bitmapregion/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/23/bitmapregion/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/23/javathread1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Java多线程基础——线程模型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/23/bitmapregion/&title=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/23/bitmapregion/&title=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/23/bitmapregion/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android加载大图——BitmapRegionDecoder》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/23/bitmapregion/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/23/bitmapregion/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNElEQVR42u3aS27DMAxF0e5/0+40QGPlPlIpYOpqFASJreMBzY9+fvC6Xtbfb16/v/v93TXTf7WWDBkyHsu4lmvNuNsQuQu/8npvMmTIOIexDog8OK6D5vr7NenDdWTIkCGjcXv+m/S+MmTIkFFL13iYTtNEGTJkyOAbIpsjDbsUtq0WlyFDxgMZvOv+/5+/Mt+QIUPGoxhXuHjKWAuXV2nJkCFjNqM2gOyE5l0BV4YMGecwyLGtTiBeB1nSbkMwGTJkHMxYh1He1k/HmXH4liFDxgEMUljWjnClrXwSfN/cS4YMGaMZ/JhXpx1GkkK+UfRoZMiQMY7Bj0d0NkQKVJ5KFt0yZMh4IKNfZPImHU8346MeMmTIOICRDi9rLbbaiBS19mTIkHEMo9Z040G2lnTG5asMGTLGMdJKMB09tjp/pdMUMmTImMqopXf8UBcJymnpe/v2kCFDxjhGP0XjrbGgfbbrXSFDhoxBjGIuGQbKdDzJhwoyZMiYzSDFanoYgieUmxNQGTJkHMBIg2A6qiSjUB6m3/xLhgwZhzFqQ800W6slox+6hjJkyBjN6Awm+VY6zbUPBbMMGTKGMq5w1UrNFF9MCmXIkDGUsWsAwJv7ewecMUaGDBmPZXRKzc4YgD+yuIiVIUPGUEYa+HYNINM3ABoMyJAhQ0a4CV7KEjDyyZAh43hG7WhFbZDAk1cZMmScwEgbarWDXORhfb0WlyFDxgMZaenIN9EJx7WyWYYMGeMYv2LcQc8pXNUUAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
