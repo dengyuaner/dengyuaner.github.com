@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Java多线程基础——场景实例 | 又尔enter的blog | Android开发工程师（4年）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,Java,Thread">
+    <meta name="description" content="前言前面我们讲了Java的线程模型和Thread，Runnable的基础相关，这一节我们来开下它们在具体场景下的应用。 join有这样一种场景，比如线程A执行到一半，需要一个数据，这个数据需要线程B去执行修改，那该怎么实现这种业务呢，Thread.join()就登场了。12345678910111213141516171819202122232425262728293031323334353637">
+<meta name="keywords" content="Android,Java,Thread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java多线程基础——场景实例">
+<meta property="og:url" content="https://www.dyenter.top/2018/04/24/javathread3/index.html">
+<meta property="og:site_name" content="又尔enter的blog">
+<meta property="og:description" content="前言前面我们讲了Java的线程模型和Thread，Runnable的基础相关，这一节我们来开下它们在具体场景下的应用。 join有这样一种场景，比如线程A执行到一半，需要一个数据，这个数据需要线程B去执行修改，那该怎么实现这种业务呢，Thread.join()就登场了。12345678910111213141516171819202122232425262728293031323334353637">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-24T06:21:26.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java多线程基础——场景实例">
+<meta name="twitter:description" content="前言前面我们讲了Java的线程模型和Thread，Runnable的基础相关，这一节我们来开下它们在具体场景下的应用。 join有这样一种场景，比如线程A执行到一半，需要一个数据，这个数据需要线程B去执行修改，那该怎么实现这种业务呢，Thread.join()就登场了。12345678910111213141516171819202122232425262728293031323334353637">
+    
+        <link rel="alternate" type="application/atom+xml" title="又尔enter的blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">又尔enter</h5>
+          <a href="mailto:253943128@qq.com" title="253943128@qq.com" class="mail">253943128@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/dengyuaner" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/6017479561" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.jianshu.com/u/22b6ec1adf98" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                简书
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Java多线程基础——场景实例</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Java多线程基础——场景实例</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-04-24T01:46:46.000Z" itemprop="datePublished" class="page-time">
+  2018-04-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>目录</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#join"><span class="post-toc-number">2.</span> <span class="post-toc-text">join</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wait-notify-notifyAll"><span class="post-toc-number">3.</span> <span class="post-toc-text">wait,notify/notifyAll</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CountdownLatch"><span class="post-toc-number">4.</span> <span class="post-toc-text">CountdownLatch</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CyclicBarrier"><span class="post-toc-number">5.</span> <span class="post-toc-text">CyclicBarrier</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-javathread3"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Java多线程基础——场景实例</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-04-24 09:46:46" datetime="2018-04-24T01:46:46.000Z"  itemprop="datePublished">2018-04-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面我们讲了Java的线程模型和Thread，Runnable的基础相关，这一节我们来开下它们在具体场景下的应用。</p>
+<h2 id="join"><a href="#join" class="headerlink" title="join"></a>join</h2><p>有这样一种场景，比如线程A执行到一半，需要一个数据，这个数据需要线程B去执行修改，那该怎么实现这种业务呢，Thread.join()就登场了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line">    int num;</span><br><span class="line">    Thread threadA, threadB;</span><br><span class="line">    public Main() &#123;</span><br><span class="line">        threadA = new Thread() &#123;</span><br><span class="line">          @Override</span><br><span class="line">          public void run() &#123;</span><br><span class="line">              System.out.println(&quot;====&gt; A开始执行&quot;);</span><br><span class="line">              if (num == 0) &#123;</span><br><span class="line">                  try &#123;</span><br><span class="line">                      System.out.println(&quot;====&gt; A需要B把num修改成5，A等待B执行完毕&quot;);</span><br><span class="line">                      threadB.join();</span><br><span class="line">                      System.out.println(&quot;====&gt; B执行完毕，A重新开始执行，num = &quot; + num);</span><br><span class="line">                  &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                      e.printStackTrace();</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        threadB = new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                System.out.println(&quot;====&gt; B开始执行&quot;);</span><br><span class="line">                num = 5;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Main main = new Main();</span><br><span class="line">        main.threadA.start();</span><br><span class="line">        main.threadB.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//输出，不加join</span><br><span class="line">====&gt; A开始执行</span><br><span class="line">====&gt; A需要B把num修改成5，A等待B执行完毕</span><br><span class="line">====&gt; B开始执行</span><br><span class="line">====&gt; B执行完毕，A重新开始执行，num = 0</span><br><span class="line">//输出，加join，B先执行完毕</span><br><span class="line">====&gt; A开始执行</span><br><span class="line">====&gt; B开始执行</span><br><span class="line">====&gt; A需要B把num修改成5，A等待B执行完毕</span><br><span class="line">====&gt; B执行完毕，A重新开始执行，num = 5</span><br></pre></td></tr></table></figure></p>
+<p>可见看见，通过调用threadB.join方法让B先执行完毕，所以A得到num结果为5，如果不加，为0。<br>另一个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">Thread threadA = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        printNumber(&quot;threadA:&quot; + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">Thread threadB = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        printNumber(&quot;threadB:&quot; + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">threadA.start();</span><br><span class="line">threadB.start();</span><br><span class="line"></span><br><span class="line">private void printNumber(String threadName) &#123;</span><br><span class="line">    for (int i = 1; i &lt;= 3; i++) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Thread.sleep(100);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(threadName + &quot;print:&quot; + i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">//输出，A，B交替显示</span><br><span class="line">threadA:Thread-0print:1</span><br><span class="line">threadB:Thread-1print:1</span><br><span class="line">threadB:Thread-1print:2</span><br><span class="line">threadA:Thread-0print:2</span><br><span class="line">threadB:Thread-1print:3</span><br><span class="line">threadA:Thread-0print:3</span><br></pre></td></tr></table></figure></p>
+<p>假如我们想A和B分开显示怎么办，即先执行完线程A，再执行线程B，join这时又登场了。我们就可以修改线程B的代码，在B的run里面调用A.join，让A执行完毕。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Thread threadB = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;threadB 开始等待 threadA&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            threadA.join();</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;threadA执行完毕，可以执行threadB了&quot;);</span><br><span class="line">        printNumber(&quot;threadB:&quot; + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">//输出，A先执行完毕，B再执行</span><br><span class="line">threadB 开始等待 threadA</span><br><span class="line">threadA:Thread-0print:1</span><br><span class="line">threadA:Thread-0print:2</span><br><span class="line">threadA:Thread-0print:3</span><br><span class="line">threadA执行完毕，可以执行threadB了</span><br><span class="line">threadB:Thread-1print:1</span><br><span class="line">threadB:Thread-1print:2</span><br><span class="line">threadB:Thread-1print:3</span><br></pre></td></tr></table></figure></p>
+<h2 id="wait-notify-notifyAll"><a href="#wait-notify-notifyAll" class="headerlink" title="wait,notify/notifyAll"></a>wait,notify/notifyAll</h2><p>还是上面的例子，假如我们想让A输出1后，转到B输出完毕，然后再回来输出A剩下的，该怎么办了，这就要用到锁机制。前一节我们讲了synchronized的相关用法。修改Thread代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Object object = new Object();</span><br><span class="line">threadA = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        synchronized (object) &#123;</span><br><span class="line">            System.out.println(&quot;threadA 1&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                object.wait();</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;threadA 2&quot;);</span><br><span class="line">            System.out.println(&quot;threadA 3&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">threadB = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        synchronized (object) &#123;</span><br><span class="line">            System.out.println(&quot;threadB 1&quot;);</span><br><span class="line">            System.out.println(&quot;threadB 2&quot;);</span><br><span class="line">            System.out.println(&quot;threadB 3&quot;);</span><br><span class="line">            //一定要通知唤醒，否则线程A一直等待</span><br><span class="line">            object.notifyAll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">//输出</span><br><span class="line">threadA 1</span><br><span class="line">threadB 1</span><br><span class="line">threadB 2</span><br><span class="line">threadB 3</span><br><span class="line">threadA 2</span><br><span class="line">threadA 3</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;可以看见A先输出1，B输出1,2,3，A再输出2,3。当A输出1后，调用wait方法吧线程A放入object的等待队列，并释放object锁。这是线程B去获取到object锁，执行输出1,2,3。执行完毕后一定要调用notifyAll通知等待队列的线程，否则它们会一直等待。A被唤醒后重新获取object的锁，并执行wait后面的代码。<br>&emsp;&emsp;再假如如果想让两个线程交替执行呢？假如A输出1个数，B再输出一个数，这样交替执行，该怎么办呢？这里我们可以借助一个flag来执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">volatile boolean flag;</span><br><span class="line">threadA = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i = 0; i &lt; 5; ) &#123;</span><br><span class="line">            synchronized (object) &#123;</span><br><span class="line">                if (flag) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        object.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                    System.out.println(&quot;threadA:&quot; + i);</span><br><span class="line">                    flag = true;</span><br><span class="line">                    object.notify();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">threadB = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        synchronized (object) &#123;</span><br><span class="line">            for (int i = 0; i &lt; 5; ) &#123;</span><br><span class="line">                if (!flag) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        object.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                    System.out.println(&quot;threadB:&quot; + i);</span><br><span class="line">                    flag = false;</span><br><span class="line">                    object.notify();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">//输出</span><br><span class="line">threadA:1</span><br><span class="line">threadB:1</span><br><span class="line">threadA:2</span><br><span class="line">threadB:2</span><br><span class="line">threadA:3</span><br><span class="line">threadB:3</span><br><span class="line">threadA:4</span><br><span class="line">threadB:4</span><br><span class="line">threadA:5</span><br><span class="line">threadB:5</span><br></pre></td></tr></table></figure></p>
+<p>这里借助于一个flag，当flag为true时，A等待，否则A输出一个数，并把flag置为true，这样A输出一个数后A就会进入等待状态；同理，当flag为false，B等待，否则B输出一个数，把flag置为false，B进入等待状态。一直这样交替执行下去。</p>
+<h2 id="CountdownLatch"><a href="#CountdownLatch" class="headerlink" title="CountdownLatch"></a>CountdownLatch</h2><p>另一种情况，假如有A，B，C，D 4个线程，D要等A，B，C三个执行完毕后，D才执行，其中A，B，C三个是乱序执行，无先后顺序。那么D该如何知道A，B，C三个线程执行完呢？这就要用到CountdownLatch。<br>&emsp;&emsp;<strong>CountDownLatch是通过一个计数器来实现的，计数器的初始值为线程的数量。每当一个线程完成了自己的任务后，计数器的值就会减1。当计数器值到达0时，它表示所有的线程已经完成了任务，然后在闭锁上等待的线程就可以恢复执行任务。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">Thread threadD = new Thread() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;D开始等待A，B，C执行完毕&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            countDownLatch.await();</span><br><span class="line">            System.out.println(&quot;A,B,C执行完毕，D开始执行&quot;);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">threadD.start();</span><br><span class="line">for (char name = &apos;A&apos;; name &lt;= &apos;C&apos;; name++) &#123;</span><br><span class="line">    final String threadName = &quot;thread&quot; + name;</span><br><span class="line">    new Thread() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            System.out.println(threadName + &quot;开始执行&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(new Random().nextInt(100));</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(threadName + &quot;执行完毕&quot;);</span><br><span class="line">            countDownLatch.countDown();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.start();</span><br><span class="line">&#125;</span><br><span class="line">//输出</span><br><span class="line">D开始等待A，B，C执行完毕</span><br><span class="line">threadA开始执行</span><br><span class="line">threadB开始执行</span><br><span class="line">threadC开始执行</span><br><span class="line">threadC执行完毕</span><br><span class="line">threadA执行完毕</span><br><span class="line">threadB执行完毕</span><br><span class="line">A,B,C执行完毕，D开始执行</span><br></pre></td></tr></table></figure></p>
+<p>可以看到A，B，C各自执行完后，D才开始执行。用之前的wait，notify已经不能完成了。CountDownLatch应用场景：比如应用程序启动类要确保在处理用户请求前，所有N个外部系统已经启动和运行了。</p>
+<h2 id="CyclicBarrier"><a href="#CyclicBarrier" class="headerlink" title="CyclicBarrier"></a>CyclicBarrier</h2><p>再以上面CountDownLatch的例子，修改一下，假如A，B，C，D 4个线程互相等对方完成一些初始化操作后，再一起执行。即线程间互相等待，用CountDownLatch是无法完成的，这里就要用到CyclicBarrier。<br>&emsp;&emsp;<strong>CyclicBarrier 的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一组线程到达一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续干活。CyclicBarrier默认的构造方法是CyclicBarrier(int parties)，其参数表示屏障拦截的线程数量，每个线程调用await方法告诉CyclicBarrier我已经到达了屏障，然后当前线程被阻塞。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">CyclicBarrier cyclicBarrier = new CyclicBarrier(4);</span><br><span class="line">for (char name = &apos;A&apos;; name &lt;= &apos;D&apos;; name++) &#123;</span><br><span class="line">    final String threadName = &quot;thread&quot; + name;</span><br><span class="line">    new Thread() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            System.out.println(threadName + &quot;开始初始化&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(new Random().nextInt(100));</span><br><span class="line">                System.out.println(threadName + &quot;初始化完毕完毕，等待其他线程&quot;);</span><br><span class="line">                cyclicBarrier.await();</span><br><span class="line">                System.out.println(threadName + &quot;继续开始执行&quot;);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; catch (BrokenBarrierException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;.start();</span><br><span class="line">&#125;</span><br><span class="line">//输出</span><br><span class="line">threadA开始初始化</span><br><span class="line">threadC开始初始化</span><br><span class="line">threadB开始初始化</span><br><span class="line">threadD开始初始化</span><br><span class="line">threadD初始化完毕完毕，等待其他线程</span><br><span class="line">threadB初始化完毕完毕，等待其他线程</span><br><span class="line">threadA初始化完毕完毕，等待其他线程</span><br><span class="line">threadC初始化完毕完毕，等待其他线程</span><br><span class="line">threadD继续开始执行</span><br><span class="line">threadC继续开始执行</span><br><span class="line">threadB继续开始执行</span><br><span class="line">threadA继续开始执行</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-04-24T06:21:26.973Z" itemprop="dateUpdated">2018-04-24 14:21:26</time>
+</span><br>
+
+
+        
+	<br />
+	
+        又尔enter版权所有，转载请注明出处：<a href="/2018/04/24/javathread3/" target="_blank" rel="external">https://www.dyenter.top/2018/04/24/javathread3/index.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://www.dyenter.top">
+            <img src="/img/avatar.jpg" alt="又尔enter">
+            又尔enter
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Thread/">Thread</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/24/javathread3/&title=《Java多线程基础——场景实例》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/24/javathread3/&title=《Java多线程基础——场景实例》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/24/javathread3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java多线程基础——场景实例》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/24/javathread3/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/24/javathread3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018/04/24/javathread2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Java多线程基础——多线程实例</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "67n8leMw86YpY0SAhDSbP5KS-gzGzoHsz",
+            appKey: "ASLkdXiKzhwVfITucqazdCbA",
+            avatar: "mm/identicon/monsterid/wavatar/retro",
+            placeholder: "请输入您的留言",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>又尔enter &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.dyenter.top/2018/04/24/javathread3/&title=《Java多线程基础——场景实例》 — 又尔enter的blog&pic=https://www.dyenter.top/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.dyenter.top/2018/04/24/javathread3/&title=《Java多线程基础——场景实例》 — 又尔enter的blog&source=Android开发小小鸟" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://www.dyenter.top/2018/04/24/javathread3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java多线程基础——场景实例》 — 又尔enter的blog&url=https://www.dyenter.top/2018/04/24/javathread3/&via=https://www.dyenter.top" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://www.dyenter.top/2018/04/24/javathread3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACN0lEQVR42u3azU7DQAxF4bz/SweJFRJKcq6dFOI5s0K0tPNlYfy3bfjs3+f8Nz9/z1/dD872xJEhQ8ZrGfvp+X3po0scIc9J/PMvqDJkyFiAwb+Gv8rDKHl8F3eWIUOGjNMLkXSwH3xlyJAhoxNwSZpIUs8//r8hQ4aMf89Iv+b8PbzFVmvGyZAhYzVGOhj45M8PzjdkyJDxEsZeOqSs7Q8egvvIkCFjNIM0y1ABWWrJ1d6Pwq4MGTLGMTpJYa1Bljbm0gcqQ4aMSQzeOKsNKTvtuWAwIEOGjNEMXnDy0JmG4LSslSFDxmoMXkDyFls6BOWLHWgGK0OGjNGMToGatt7SBtzFg5YhQ8ZoRq1QvKv0TZPRi0+WIUPGUEandOynffyvLtJHGTJkjGakC1680E2XXzvbqjJkyFiBwZtc6QiT73rc9ckyZMiYykjTMt4a4+VrGsRlyJCxMuOuVG8/PenDQompDBkyRjN4AldL8mqPho8fZMiQsQKDr3Dx9/BFis6KBppyyJAhYxCDh9r0azqlKW/5yZAhYwUGD453td5IY+6GwYAMGTJGMHiQraWSvEB9ZNlChgwZL2fs4eFI0kRLn/dhyJYhQ8ZoRhrm+EV5qVwbkcqQIWM1Rm0xIg2OfI7KxwNxn0+GDBkvZ3RaXXeNJ3n5GjTaZMiQsSSDXzcN0K0EVIYMGTLCFDAtUzvFsAwZMtZhdNZP+foFWfJodQRlyJAxlJEOBmqBtd9Q6y9qyJAh44WML+tS2xkeG5t+AAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '看这里看这里!';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)嘿嘿!好看吧!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
